@@ -1,8 +1,8 @@
-import Lab1 from "./Lab1";
 import { Route, Routes, Navigate } from "react-router-dom";
-import TOC from "./TOC";
+import Lab1 from "./Lab1"; // default to be ./Lab1.index.tsx
 import Lab2 from "./Lab2";
 import Lab3 from "./Lab3";
+import TOC from "./TOC";
 
 export default function Labs() {
     return (
