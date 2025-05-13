@@ -2,6 +2,8 @@ export default function Lab1() {
     return (
         <div id="wd-lab1">
             <h2>Lab 1</h2>
+            <p>Qiuying Zhuo</p>
+            <p>CS5610 41980 Web Development SEC 04 Summer 1 2025 [VTL-2-OL]</p>
             <h3>HTML Examples</h3>
             <div id="wd-h-tag">
                 <h4>Heading Tags</h4>
@@ -177,6 +179,9 @@ export default function Lab1() {
                         id="wd-all-good">
                         Hello World!
                     </button>
+
+                    <h5 id="wd-file-upload">File Upload</h5>
+                    <input type="file" id="wd-upload-input" name="upload" />
 
                     <h5 id="wd-radio-buttons">Radio buttons</h5>
 
