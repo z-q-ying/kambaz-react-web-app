@@ -1,5 +1,12 @@
+import { Container } from "react-bootstrap";
 import "./index.css";
+
 import BackgroundColors from "./BackgroundColors";
+import BootstrapForms from "./BootstrapForms";
+import BootstrapGrids from "./BootstrapGrids";
+import BootstrapLists from "./BootstrapLists";
+import BootstrapNavigation from "./BootstrapNavigation";
+import BootstrapTables from "./BootstrapTables";
 import Borders from "./Borders";
 import Corners from "./Corners";
 import Dimensions from "./Dimensions";
@@ -11,14 +18,18 @@ import Margins from "./Margins";
 import Padding from "./Padding";
 import Positions from "./Positions";
 import ReactIconsSampler from "./ReactIcons";
+import ScreenSizeLabel from "./ScreenSizeLabel";
 import Zindex from "./Zindex";
 
 export default function Lab2() {
     return (
-        <div id="wd-lab2">
+        <Container id="wd-lab2">
             <h2>Lab 2 - Cascading Style Sheets</h2>
             <p>Qiuying Zhuo</p>
             <p>CS5610 41980 Web Development SEC 04 Summer 1 2025 [VTL-2-OL]</p>
+
+            {/* CSS */}
+            <hr />
             <h3>Styling with the STYLE attribute</h3>
             <p>
                 Style attribute allows configuring look and feel
@@ -82,6 +93,16 @@ export default function Lab2() {
             <GridLayout />
             <Flex />
             <ReactIconsSampler />
-        </div>
+
+            {/* Bootstrap */}
+            <hr />
+            <h2>Bootstrap</h2>
+            <BootstrapGrids />
+            <ScreenSizeLabel />
+            <BootstrapTables />
+            <BootstrapLists />
+            <BootstrapForms />
+            <BootstrapNavigation />
+        </Container>
     );
 }
