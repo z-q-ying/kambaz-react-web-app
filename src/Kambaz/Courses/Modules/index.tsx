@@ -1,110 +1,223 @@
+import { BsGripVertical } from "react-icons/bs";
+import { ListGroup } from "react-bootstrap";
+import LessonControlButtons from "./LessonControlButtons";
+import ModulesControls from "./ModulesControls";
+
 export default function Modules() {
     return (
         <div>
-            {/* Implement Collapse All button, View Progress button, etc. */}
-            <button id="wd-collapse-all-modules">Collapse All</button>{" "}
-            <button id="wd-view-progress">View Progress</button>{" "}
-            <select id="wd-publish-all-modules" defaultValue={"all"}>
-                <option value="all">Publish All</option>
-                <option value="modules">Publish Modules Only</option>
-                <option value="unpublish-all">Unpublish All</option>
-                <option value="unpublish-modules">Unpublish Modules Only</option>
-            </select>{" "}
-            <button id="wd-add-module">+ Module</button>
-            <ul id="wd-modules">
-                <li className="wd-module">
-                    <div className="wd-title">Lecture 1 - Building React User Interfaces with HTML, Setting Up the Dev Environment</div>
-                    <ul className="wd-lessons">
-                        <li className="wd-lesson">
-                            <span className="wd-title">LEARNING OBJECTIVES</span>
-                            <ul className="wd-content">
-                                <li className="wd-content-item">Introduction to the course</li>
-                                <li className="wd-content-item">Learn what is Web Development</li>
-                            </ul>
-                        </li>
+            <ModulesControls /><br /><br /><br /><br />
 
-                        <li className="wd-lesson">
-                            <span className="wd-title">READING</span>
-                            <ul className="wd-content">
-                                <li className="wd-content-item">Chapter 1 - Building React User Interfaces with HTML</li>
-                            </ul>
-                        </li>
+            <ListGroup className="rounded-0" id="wd-modules">
+                {/* Week 1 */}
+                <ListGroup.Item className="wd-module p-0 mb-5 fs-5 border-gray">
+                    <div className="wd-title p-3 ps-2 bg-secondary">
+                        <BsGripVertical className="me-2 fs-3" />
+                        Week 1 - Building React User Interfaces with HTML
+                        <LessonControlButtons />
+                    </div>
 
-                        <li className="wd-lesson">
-                            <span className="wd-title">Slides</span>
-                            <ul className="wd-content">
-                                <li className="wd-content-item">Introduction to Web Development</li>
-                                <li className="wd-content-item">Creating a React Application</li>
-                                <li className="wd-content-item">Commit your source to GitHub.com</li>
-                                <li className="wd-content-item">Deploying to Netlify</li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
+                    <ListGroup className="wd-lessons rounded-0">
+                        <ListGroup.Item className="wd-lesson p-3 ps-1">
+                            <BsGripVertical className="me-2 fs-3" />
+                            LEARNING OBJECTIVES
+                            <LessonControlButtons />
+                        </ListGroup.Item>
+                        <ListGroup.Item className="wd-lesson p-3 ps-1">
+                            <BsGripVertical className="me-2 fs-3" />
+                            <span className="ms-4">Introduction to the course</span>
+                            <LessonControlButtons />
+                        </ListGroup.Item>
+                        <ListGroup.Item className="wd-lesson p-3 ps-1">
+                            <BsGripVertical className="me-2 fs-3" />
+                            <span className="ms-4">Learn what is Web Development</span>
+                            <LessonControlButtons />
+                        </ListGroup.Item>
+                    </ListGroup>
 
-                {/* Lecture 2 */}
-                <li className="wd-module">
-                    <div className="wd-title">Lecture 2 - Prototyping the React Kambaz User Interface with HTML</div>
-                    <ul className="wd-lessons">
-                        <li className="wd-lesson">
-                            <span className="wd-title">LEARNING OBJECTIVES</span>
-                            <ul className="wd-content">
-                                <li className="wd-content-item">Learn how to create user interfaces with HTML</li>
-                                <li className="wd-content-item">Deploy the assignment to Netlify</li>
-                            </ul>
-                        </li>
+                    <ListGroup className="wd-lessons rounded-0">
+                        <ListGroup.Item className="wd-lesson p-3 ps-1">
+                            <BsGripVertical className="me-2 fs-3" />
+                            READING
+                            <LessonControlButtons />
+                        </ListGroup.Item>
+                        <ListGroup.Item className="wd-lesson p-3 ps-1">
+                            <BsGripVertical className="me-2 fs-3" />
+                            <span className="ms-4">Chapter 1 - Building React User Interfaces with HTML</span>
+                            <LessonControlButtons />
+                        </ListGroup.Item>
+                    </ListGroup>
 
-                        <li className="wd-lesson">
-                            <span className="wd-title">READING</span>
-                            <ul className="wd-content">
-                                <li className="wd-content-item">Chapter 1 - Building React User Interfaces with HTML</li>
-                            </ul>
-                        </li>
+                    <ListGroup className="wd-lessons rounded-0">
+                        <ListGroup.Item className="wd-lesson p-3 ps-1">
+                            <BsGripVertical className="me-2 fs-3" />
+                            SLIDES
+                            <LessonControlButtons />
+                        </ListGroup.Item>
+                        <ListGroup.Item className="wd-lesson p-3 ps-1">
+                            <BsGripVertical className="me-2 fs-3" />
+                            <span className="ms-4">Introduction to Web Development</span>
+                            <LessonControlButtons />
+                        </ListGroup.Item>
+                        <ListGroup.Item className="wd-lesson p-3 ps-1">
+                            <BsGripVertical className="me-2 fs-3" />
+                            <span className="ms-4">Creating a React Application</span>
+                            <LessonControlButtons />
+                        </ListGroup.Item>
+                        <ListGroup.Item className="wd-lesson p-3 ps-1">
+                            <BsGripVertical className="me-2 fs-3" />
+                            <span className="ms-4">Commit your source to GitHub.com</span>
+                            <LessonControlButtons />
+                        </ListGroup.Item>
+                        <ListGroup.Item className="wd-lesson p-3 ps-1">
+                            <BsGripVertical className="me-2 fs-3" />
+                            <span className="ms-4">Deploying to Netlify</span>
+                            <LessonControlButtons />
+                        </ListGroup.Item>
+                    </ListGroup>
+                </ListGroup.Item>
 
-                        <li className="wd-lesson">
-                            <span className="wd-title">Slides</span>
-                            <ul className="wd-content">
-                                <li className="wd-content-item">Implementing the Kambaz Account Screens</li>
-                                <li className="wd-content-item">Implementing the Kambaz Dashboard Screen</li>
-                                <li className="wd-content-item">Implementing the Kambaz Modules Screen</li>
-                                <li className="wd-content-item">Kanbas Web App on Netlify</li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
+                {/* Week 2 */}
+                <ListGroup.Item className="wd-module p-0 mb-5 fs-5 border-gray">
+                    <div className="wd-title p-3 ps-2 bg-secondary">
+                        <BsGripVertical className="me-2 fs-3" />
+                        Week 2 - Prototyping the React Kambaz User Interface with HTML
+                        <LessonControlButtons />
+                    </div>
 
-                {/* Lecture 3 */}
-                <li className="wd-module">
-                    <div className="wd-title">Lecture 3 - Styling Web Pages with CSS and Bootstrap</div>
-                    <ul className="wd-lessons">
-                        <li className="wd-lesson">
-                            <span className="wd-title">LEARNING OBJECTIVES</span>
-                            <ul className="wd-content">
-                                <li className="wd-content-item">Introduction to CSS</li>
-                                <li className="wd-content-item">Selectors by tag ID, classes, and document structure</li>
-                                <li className="wd-content-item">Styling color and background color</li>
-                                <li className="wd-content-item">The box model - styling margins, borders, and paddings</li>
-                            </ul>
-                        </li>
+                    <ListGroup className="wd-lessons rounded-0">
+                        <ListGroup.Item className="wd-lesson p-3 ps-1">
+                            <BsGripVertical className="me-2 fs-3" />
+                            LEARNING OBJECTIVES
+                            <LessonControlButtons />
+                        </ListGroup.Item>
+                        <ListGroup.Item className="wd-lesson p-3 ps-1">
+                            <BsGripVertical className="me-2 fs-3" />
+                            <span className="ms-4">Learn how to create user interfaces with HTML</span>
+                            <LessonControlButtons />
+                        </ListGroup.Item>
+                        <ListGroup.Item className="wd-lesson p-3 ps-1">
+                            <BsGripVertical className="me-2 fs-3" />
+                            <span className="ms-4">Deploy the assignment to Netlify</span>
+                            <LessonControlButtons />
+                        </ListGroup.Item>
+                    </ListGroup>
 
-                        <li className="wd-lesson">
-                            <span className="wd-title">READING</span>
-                            <ul className="wd-content">
-                                <li className="wd-content-item">Chapter 2 - Styling Web Pages with CSS</li>
-                            </ul>
-                        </li>
+                    <ListGroup className="wd-lessons rounded-0">
+                        <ListGroup.Item className="wd-lesson p-3 ps-1">
+                            <BsGripVertical className="me-2 fs-3" />
+                            READING
+                            <LessonControlButtons />
+                        </ListGroup.Item>
+                        <ListGroup.Item className="wd-lesson p-3 ps-1">
+                            <BsGripVertical className="me-2 fs-3" />
+                            <span className="ms-4">Chapter 1 - Building React User Interfaces with HTML</span>
+                            <LessonControlButtons />
+                        </ListGroup.Item>
+                    </ListGroup>
 
-                        <li className="wd-lesson">
-                            <span className="wd-title">Slides</span>
-                            <ul className="wd-content">
-                                <li className="wd-content-item">Introduction to Cascading Style Sheets</li>
-                                <li className="wd-content-item">The Box Model</li>
-                                <li className="wd-content-item">Rotating content & Gradient background</li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
+                    <ListGroup className="wd-lessons rounded-0">
+                        <ListGroup.Item className="wd-lesson p-3 ps-1">
+                            <BsGripVertical className="me-2 fs-3" />
+                            SLIDES
+                            <LessonControlButtons />
+                        </ListGroup.Item>
+                        <ListGroup.Item className="wd-lesson p-3 ps-1">
+                            <BsGripVertical className="me-2 fs-3" />
+                            <span className="ms-4">Implementing the Kambaz Account Screens</span>
+                            <LessonControlButtons />
+                        </ListGroup.Item>
+                        <ListGroup.Item className="wd-lesson p-3 ps-1">
+                            <BsGripVertical className="me-2 fs-3" />
+                            <span className="ms-4">Implementing the Kambaz Dashboard Screen</span>
+                            <LessonControlButtons />
+                        </ListGroup.Item>
+                        <ListGroup.Item className="wd-lesson p-3 ps-1">
+                            <BsGripVertical className="me-2 fs-3" />
+                            <span className="ms-4">Implementing the Kambaz Modules Screen</span>
+                            <LessonControlButtons />
+                        </ListGroup.Item>
+                        <ListGroup.Item className="wd-lesson p-3 ps-1">
+                            <BsGripVertical className="me-2 fs-3" />
+                            <span className="ms-4">Kanbas Web App on Netlify</span>
+                            <LessonControlButtons />
+                        </ListGroup.Item>
+                    </ListGroup>
+                </ListGroup.Item>
+
+                {/* Week 3 */}
+                <ListGroup.Item className="wd-module p-0 mb-5 fs-5 border-gray">
+                    <div className="wd-title p-3 ps-2 bg-secondary">
+                        <BsGripVertical className="me-2 fs-3" />
+                        Week 3 - Styling Web Pages with CSS and Bootstrap
+                        <LessonControlButtons />
+                    </div>
+
+                    <ListGroup className="wd-lessons rounded-0">
+                        <ListGroup.Item className="wd-lesson p-3 ps-1">
+                            <BsGripVertical className="me-2 fs-3" />
+                            LEARNING OBJECTIVES
+                            <LessonControlButtons />
+                        </ListGroup.Item>
+                        <ListGroup.Item className="wd-lesson p-3 ps-1">
+                            <BsGripVertical className="me-2 fs-3" />
+                            <span className="ms-4">Introduction to CSS</span>
+                            <LessonControlButtons />
+                        </ListGroup.Item>
+                        <ListGroup.Item className="wd-lesson p-3 ps-1">
+                            <BsGripVertical className="me-2 fs-3" />
+                            <span className="ms-4">Selectors by tag ID, classes, and document structure</span>
+                            <LessonControlButtons />
+                        </ListGroup.Item>
+                        <ListGroup.Item className="wd-lesson p-3 ps-1">
+                            <BsGripVertical className="me-2 fs-3" />
+                            <span className="ms-4">Styling color and background color</span>
+                            <LessonControlButtons />
+                        </ListGroup.Item>
+                        <ListGroup.Item className="wd-lesson p-3 ps-1">
+                            <BsGripVertical className="me-2 fs-3" />
+                            <span className="ms-4">The box model - styling margins, borders, and paddings</span>
+                            <LessonControlButtons />
+                        </ListGroup.Item>
+                    </ListGroup>
+
+                    <ListGroup className="wd-lessons rounded-0">
+                        <ListGroup.Item className="wd-lesson p-3 ps-1">
+                            <BsGripVertical className="me-2 fs-3" />
+                            READING
+                            <LessonControlButtons />
+                        </ListGroup.Item>
+                        <ListGroup.Item className="wd-lesson p-3 ps-1">
+                            <BsGripVertical className="me-2 fs-3" />
+                            <span className="ms-4">Chapter 2 - Styling Web Pages with CSS</span>
+                            <LessonControlButtons />
+                        </ListGroup.Item>
+                    </ListGroup>
+
+                    <ListGroup className="wd-lessons rounded-0">
+                        <ListGroup.Item className="wd-lesson p-3 ps-1">
+                            <BsGripVertical className="me-2 fs-3" />
+                            SLIDES
+                            <LessonControlButtons />
+                        </ListGroup.Item>
+                        <ListGroup.Item className="wd-lesson p-3 ps-1">
+                            <BsGripVertical className="me-2 fs-3" />
+                            <span className="ms-4">Introduction to Cascading Style Sheets</span>
+                            <LessonControlButtons />
+                        </ListGroup.Item>
+                        <ListGroup.Item className="wd-lesson p-3 ps-1">
+                            <BsGripVertical className="me-2 fs-3" />
+                            <span className="ms-4">The Box Model</span>
+                            <LessonControlButtons />
+                        </ListGroup.Item>
+                        <ListGroup.Item className="wd-lesson p-3 ps-1">
+                            <BsGripVertical className="me-2 fs-3" />
+                            <span className="ms-4">Rotating content & Gradient background</span>
+                            <LessonControlButtons />
+                        </ListGroup.Item>
+                    </ListGroup>
+                </ListGroup.Item>
+            </ListGroup>
         </div>
     );
 }
