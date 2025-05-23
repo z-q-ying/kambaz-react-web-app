@@ -36,7 +36,10 @@ export default function Lab3() {
   console.log("Hello World!");
   return (
     <div id="wd-lab3" className="m-3">
-      <h3>Lab 3</h3>
+      <h2>Lab 3</h2>
+      <p>Qiuying Zhuo</p>
+      <p>CS5610 41980 Web Development SEC 04 Summer 1 2025 [VTL-2-OL]</p>
+      <hr />
       <VariablesAndConstants />
       <VariableTypes />
       <BooleanVariables />

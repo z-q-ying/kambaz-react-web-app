@@ -1,5 +1,12 @@
 import { FaAlignJustify } from "react-icons/fa";
-import { Routes, Route, Navigate } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useParams,
+} from "react-router-dom";
+import { courses } from "../Database";
 import Assignments from "./Assignments";
 import AssignmentEditor from "./Assignments/Editor";
 import CourseNavigation from "./Navigation";
@@ -8,11 +15,15 @@ import Modules from "./Modules";
 import PeopleTable from "./People/Table";
 
 export default function Courses() {
+  const { cid } = useParams();
+  const { pathname } = useLocation();
+  const course = courses.find((course) => course._id === cid);
+
   return (
     <div id="wd-courses">
       <h2 className="text-danger">
-        <FaAlignJustify className="me-4 fs-4 mb-1" />
-        Course 1234
+        <FaAlignJustify className="me-3 fs-4 mb-1" />
+        {course?.name} &gt; {pathname.split("/")[4]}
       </h2>
       <hr />
       <div className="d-flex">
