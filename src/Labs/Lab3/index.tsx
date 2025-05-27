@@ -1,3 +1,4 @@
+import { ListGroup } from "react-bootstrap";
 import Add from "./Add";
 import AddingAndRemovingToFromArrays from "./AddingAndRemovingToFromArrays";
 import ArrayIndexAndLength from "./ArrayIndexAndLength";
@@ -31,8 +32,10 @@ import TodoItem from "./todos/TodoItem";
 import TodoList from "./todos/TodoList";
 import VariablesAndConstants from "./VariablesAndConstants";
 import VariableTypes from "./VariableTypes";
+import { useSelector } from "react-redux";
 
 export default function Lab3() {
+  const { todos } = useSelector((state: any) => state.todosReducer);
   console.log("Hello World!");
   return (
     <div id="wd-lab3" className="m-3">
@@ -40,6 +43,17 @@ export default function Lab3() {
       <p>Qiuying Zhuo</p>
       <p>CS5610 41980 Web Development SEC 04 Summer 1 2025 [VTL-2-OL]</p>
       <hr />
+
+      {/* Lab 4 Redux */}
+      <h4>Redux and Todo List</h4>
+      <ListGroup>
+        {todos.map((todo: any) => (
+          <ListGroup.Item key={todo.id}>{todo.title}</ListGroup.Item>
+        ))}
+      </ListGroup>
+      <hr />
+
+      {/* Lab 3 */}
       <VariablesAndConstants />
       <VariableTypes />
       <BooleanVariables />
