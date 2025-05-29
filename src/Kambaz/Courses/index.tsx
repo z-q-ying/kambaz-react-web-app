@@ -6,7 +6,6 @@ import {
   useLocation,
   useParams,
 } from "react-router-dom";
-import { courses } from "../Database";
 import Assignments from "./Assignments";
 import AssignmentEditor from "./Assignments/Editor";
 import CourseNavigation from "./Navigation";
@@ -14,7 +13,7 @@ import Home from "./Home";
 import Modules from "./Modules";
 import PeopleTable from "./People/Table";
 
-export default function Courses() {
+export default function Courses({ courses }: { readonly courses: any[] }) {
   const { cid } = useParams();
   const { pathname } = useLocation();
   const course = courses.find((course) => course._id === cid);
