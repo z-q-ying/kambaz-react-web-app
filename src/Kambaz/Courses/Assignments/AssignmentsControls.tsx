@@ -2,6 +2,7 @@ import { Button, Form, InputGroup } from "react-bootstrap";
 import { FaPlus } from "react-icons/fa";
 import { IoSearchOutline } from "react-icons/io5";
 import { useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export default function AssignmentsControls({
   onAddGroup,
@@ -10,6 +11,12 @@ export default function AssignmentsControls({
 }) {
   const { cid } = useParams();
   const navigate = useNavigate();
+
+  const currentUser = useSelector(
+    (state: any) => state.accountReducer.currentUser
+  );
+  const isStudent = currentUser?.role === "STUDENT";
+
   const handleAddAssignmentClick = () => {
     navigate(`/Kambaz/Courses/${cid}/Assignments/new`); // Add mode, no aid
   };
@@ -32,30 +39,34 @@ export default function AssignmentsControls({
 
       {/* Buttons */}
       <div>
-        <Button
-          variant="secondary"
-          size="lg"
-          className="me-1"
-          onClick={onAddGroup}
-        >
-          <FaPlus
-            className="position-relative me-2"
-            style={{ bottom: "1px" }}
-          />
-          Group
-        </Button>
-        <Button
-          variant="danger"
-          size="lg"
-          className="me-1"
-          onClick={handleAddAssignmentClick}
-        >
-          <FaPlus
-            className="position-relative me-2"
-            style={{ bottom: "1px" }}
-          />
-          Assignment
-        </Button>
+        {!isStudent && (
+          <>
+            <Button
+              variant="secondary"
+              size="lg"
+              className="me-1"
+              onClick={onAddGroup}
+            >
+              <FaPlus
+                className="position-relative me-2"
+                style={{ bottom: "1px" }}
+              />
+              Group
+            </Button>
+            <Button
+              variant="danger"
+              size="lg"
+              className="me-1"
+              onClick={handleAddAssignmentClick}
+            >
+              <FaPlus
+                className="position-relative me-2"
+                style={{ bottom: "1px" }}
+              />
+              Assignment
+            </Button>{" "}
+          </>
+        )}
       </div>
     </div>
   );
