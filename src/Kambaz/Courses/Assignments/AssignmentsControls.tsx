@@ -1,12 +1,40 @@
 import { Button, Form, InputGroup } from "react-bootstrap";
 import { FaPlus } from "react-icons/fa";
 import { IoSearchOutline } from "react-icons/io5";
+import { useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
+import { useState } from "react";
+import { addAssignmentGroup } from "./reducer";
+import AssignmentGroupEditor from "./AssignmentGroupEditor";
 
 export default function AssignmentsControls() {
+  const { cid } = useParams();
+  const [showAddGroupModal, setShowAddGroupModal] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const handleClose = () => {
+    setShowAddGroupModal(false);
+  };
+
+  const handleShow = () => {
+    setShowAddGroupModal(true);
+  };
+
+  const handleSave = (name: string, w: number) => {
+    const newGroup = {
+      groupName: name,
+      courseId: cid,
+      weight: w,
+    };
+    dispatch(addAssignmentGroup(newGroup));
+    handleClose();
+  };
+
   return (
     <div className="d-flex flex-nowrap justify-content-between align-items-center mb-3 gap-3">
       {/* Search Input */}
-      <div style={{ width: "300px" }}>
+      <div style={{ width: "600px" }}>
         <InputGroup size="lg" className="border rounded">
           <InputGroup.Text className="bg-transparent border-0">
             <IoSearchOutline />
@@ -21,7 +49,12 @@ export default function AssignmentsControls() {
 
       {/* Buttons */}
       <div>
-        <Button variant="secondary" size="lg" className="me-1">
+        <Button
+          variant="secondary"
+          size="lg"
+          className="me-1"
+          onClick={handleShow}
+        >
           <FaPlus
             className="position-relative me-2"
             style={{ bottom: "1px" }}
@@ -35,6 +68,14 @@ export default function AssignmentsControls() {
           />
           Assignment
         </Button>
+
+        {/* Assignment Group Editor Modal */}
+        <AssignmentGroupEditor
+          show={showAddGroupModal}
+          handleClose={handleClose}
+          dialogTitle="Add Assignment Group"
+          onSave={handleSave}
+        />
       </div>
     </div>
   );

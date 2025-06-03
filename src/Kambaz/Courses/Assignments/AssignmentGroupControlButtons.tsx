@@ -1,7 +1,7 @@
 import { IoEllipsisVertical } from "react-icons/io5";
 import { FaPlus } from "react-icons/fa6";
 
-export default function AssignmentControlButtons({
+export default function AssignmentGroupControlButtons({
   weight,
 }: {
   weight: number;

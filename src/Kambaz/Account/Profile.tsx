@@ -6,6 +6,7 @@ import { Button, FormControl } from "react-bootstrap";
 
 export default function Profile() {
   const [profile, setProfile] = useState<any>({});
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

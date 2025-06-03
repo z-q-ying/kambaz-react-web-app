@@ -17,7 +17,17 @@ export default function AssignmentEditor() {
   ];
 
   const { cid, aid } = useParams();
-  const assignment = assignments.find((a) => a._id === aid);
+
+  // Assignment Group
+  const group = assignments.find((g) =>
+    g.assignments.some((a) => a._id === aid)
+  );
+  const assignmentGroup = group?.assignmentGroup;
+
+  // Assignment Item
+  const assignment = assignments
+    .flatMap((group) => group.assignments)
+    .find((a) => a._id === aid);
 
   return (
     <div id="wd-assignments-editor p-3">
@@ -54,7 +64,7 @@ export default function AssignmentEditor() {
             Assignment Group
           </Form.Label>
           <Col sm={9}>
-            <Form.Select defaultValue={assignment?.assignmentGroup}>
+            <Form.Select defaultValue={assignmentGroup}>
               <option value="ASSIGNMENTS">ASSIGNMENTS</option>
               <option value="QUIZZES">QUIZZES</option>
               <option value="EXAMS">EXAMS</option>
