@@ -1,9 +1,15 @@
-// TODO: removed unused import
 import { BsGripVertical } from "react-icons/bs";
 import { ListGroup, Row, Col } from "react-bootstrap";
 import { LuNotebookPen } from "react-icons/lu";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { useState } from "react";
+import {
+  deleteAssignmentGroup,
+  updateAssignmentGroup,
+  addAssignmentGroup,
+} from "../Assignments/reducer";
+import AssignmentGroupEditor from "./AssignmentGroupEditor";
 import AssignmentsControls from "./AssignmentsControls";
 import AssignmentGroupControlButtons from "./AssignmentGroupControlButtons";
 import AssignmentItemControlButtons from "./AssignmentItemControlButtons";
@@ -23,19 +29,73 @@ function formatDateTime(dt: string): string {
 
 export default function Assignments() {
   const { cid } = useParams();
-  console.log("!!! Assignments component rendered for course ID:", cid);
   const { assignmentGroups } = useSelector(
     (state: any) => state.assignmentReducer
   );
-  console.log("!!! Assignments Groups", assignmentGroups);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  // State for the AssignmentGroupEditor modal
+  const [showGroupEditorModal, setShowGroupEditorModal] = useState(false);
+  const [currentGroupToEdit, setCurrentGroupToEdit] = useState<any>(null);
+  const [editorMode, setEditorMode] = useState<"add" | "edit">("add");
+
+  const handleCloseGroupEditorModal = () => {
+    setShowGroupEditorModal(false);
+    setCurrentGroupToEdit(null);
+  };
+
+  const handleAddGroup = () => {
+    setEditorMode("add");
+    setCurrentGroupToEdit(null);
+    setShowGroupEditorModal(true);
+  };
+
+  const handleEditGroup = (
+    groupId: string,
+    groupName: string,
+    weight: number
+  ) => {
+    setEditorMode("edit");
+    setCurrentGroupToEdit({ _id: groupId, groupName, weight });
+    setShowGroupEditorModal(true);
+  };
+
+  const handleSaveGroup = (name: string, w: number) => {
+    if (editorMode === "add") {
+      const newGroup = {
+        groupName: name,
+        courseId: cid,
+        weight: w,
+      };
+      dispatch(addAssignmentGroup(newGroup));
+    } else if (editorMode === "edit" && currentGroupToEdit) {
+      const updatedGroup = {
+        ...currentGroupToEdit,
+        groupName: name,
+        weight: w,
+      };
+      dispatch(updateAssignmentGroup(updatedGroup));
+    }
+    handleCloseGroupEditorModal();
+  };
+
+  const handleDeleteGroup = (groupId: string) => {
+    if (
+      window.confirm(
+        "Are you sure you want to remove this assignment group and all its assignments?"
+      )
+    ) {
+      dispatch(deleteAssignmentGroup(groupId));
+    }
+  };
 
   return (
     <div id="wd-assignments">
       <div className="mb-4 pb-1">
-        <AssignmentsControls />
+        <AssignmentsControls onAddGroup={handleAddGroup} />
       </div>
+
       {assignmentGroups
         .filter((g: any) => g.courseId === cid)
         .map((g: any) => (
@@ -47,7 +107,13 @@ export default function Assignments() {
                   <BsGripVertical className="me-2 fs-3" />
                   {g.groupName}
                 </div>
-                <AssignmentGroupControlButtons weight={g.weight} />
+                <AssignmentGroupControlButtons
+                  groupId={g._id}
+                  groupName={g.groupName}
+                  weight={g.weight}
+                  onEdit={handleEditGroup}
+                  onDelete={handleDeleteGroup}
+                />
               </div>
 
               {/* Assignment Items */}
@@ -95,6 +161,20 @@ export default function Assignments() {
             </ListGroup.Item>
           </ListGroup>
         ))}
+
+      {/* Assignment Group Editor Modal*/}
+      <AssignmentGroupEditor
+        show={showGroupEditorModal}
+        handleClose={handleCloseGroupEditorModal}
+        dialogTitle={
+          editorMode === "add"
+            ? "Add Assignment Group"
+            : "Edit Assignment Group"
+        }
+        initialGroupName={currentGroupToEdit?.groupName || ""}
+        initialWeight={currentGroupToEdit?.weight || ""}
+        onSave={handleSaveGroup}
+      />
     </div>
   );
 }

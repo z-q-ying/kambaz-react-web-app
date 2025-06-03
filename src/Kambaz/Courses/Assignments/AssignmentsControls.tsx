@@ -1,39 +1,15 @@
 import { Button, Form, InputGroup } from "react-bootstrap";
 import { FaPlus } from "react-icons/fa";
 import { IoSearchOutline } from "react-icons/io5";
-import { useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
-import { useState } from "react";
-import { addAssignmentGroup } from "./reducer";
-import AssignmentGroupEditor from "./AssignmentGroupEditor";
 
-export default function AssignmentsControls() {
-  const { cid } = useParams();
-  const [showAddGroupModal, setShowAddGroupModal] = useState(false);
-
-  const dispatch = useDispatch();
-
-  const handleClose = () => {
-    setShowAddGroupModal(false);
-  };
-
-  const handleShow = () => {
-    setShowAddGroupModal(true);
-  };
-
-  const handleSave = (name: string, w: number) => {
-    const newGroup = {
-      groupName: name,
-      courseId: cid,
-      weight: w,
-    };
-    dispatch(addAssignmentGroup(newGroup));
-    handleClose();
-  };
-
+export default function AssignmentsControls({
+  onAddGroup,
+}: {
+  onAddGroup: () => void; // Function to call for the "+ Group" button
+}) {
   return (
     <div className="d-flex flex-nowrap justify-content-between align-items-center mb-3 gap-3">
-      {/* Search Input */}
+      {/* Search Bar */}
       <div style={{ width: "600px" }}>
         <InputGroup size="lg" className="border rounded">
           <InputGroup.Text className="bg-transparent border-0">
@@ -53,7 +29,7 @@ export default function AssignmentsControls() {
           variant="secondary"
           size="lg"
           className="me-1"
-          onClick={handleShow}
+          onClick={onAddGroup}
         >
           <FaPlus
             className="position-relative me-2"
@@ -68,14 +44,6 @@ export default function AssignmentsControls() {
           />
           Assignment
         </Button>
-
-        {/* Assignment Group Editor Modal */}
-        <AssignmentGroupEditor
-          show={showAddGroupModal}
-          handleClose={handleClose}
-          dialogTitle="Add Assignment Group"
-          onSave={handleSave}
-        />
       </div>
     </div>
   );

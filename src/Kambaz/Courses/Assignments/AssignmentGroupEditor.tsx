@@ -5,22 +5,27 @@ export default function AssignmentGroupEditor({
   show,
   handleClose,
   dialogTitle,
+  initialGroupName = "",
+  initialWeight = "",
   onSave,
 }: {
   show: boolean;
   handleClose: () => void;
   dialogTitle: string;
+  initialGroupName?: string; // Optional for add mode
+  initialWeight?: number | ""; // Optional for add mode
   onSave: (groupName: string, weight: number) => void;
 }) {
-  const [groupName, setGroupName] = useState("");
-  const [weight, setWeight] = useState<number | "">("");
+  const [groupName, setGroupName] = useState(initialGroupName);
+  const [weight, setWeight] = useState<number | "">(initialWeight);
 
+  // To sync state with props
   useEffect(() => {
     if (show) {
-      setGroupName("");
-      setWeight("");
+      setGroupName(initialGroupName);
+      setWeight(initialWeight);
     }
-  }, [show]);
+  }, [show, initialGroupName, initialWeight]); // Dependencies
 
   const handleSaveClick = () => {
     onSave(groupName, typeof weight === "string" ? 0 : weight);
@@ -35,7 +40,7 @@ export default function AssignmentGroupEditor({
   return (
     <Modal
       show={show}
-      onHide={handleModalClose}
+      onHide={handleModalClose} // Call handler upon X or Esc
       backdrop="static"
       keyboard={false}
     >
