@@ -2,6 +2,7 @@ import { IoEllipsisVertical } from "react-icons/io5";
 import { FaPlus } from "react-icons/fa6";
 import { Dropdown } from "react-bootstrap";
 import { FaPencilAlt, FaTrash } from "react-icons/fa";
+import "../../styles.css";
 
 export default function AssignmentGroupControlButtons({
   groupId,
@@ -21,9 +22,13 @@ export default function AssignmentGroupControlButtons({
       <div className="px-3 border rounded-pill">{weight}% of Total</div>
       <FaPlus className="fs-5" />
 
-      {/* Dropdown for Ellipsis Menu */}
+      {/* Dropdown upon the Ellipsis being clikced */}
       <Dropdown>
-        <Dropdown.Toggle variant="link" id="dropdown-basic" className="p-0">
+        <Dropdown.Toggle
+          variant="link"
+          id="dropdown-assignment-group"
+          className="p-0 no-caret-toggle"
+        >
           <IoEllipsisVertical className="fs-5 text-dark" />
         </Dropdown.Toggle>
 

@@ -13,10 +13,7 @@
         "availableFrom": "2025-05-02T00:00:00",
         "dueDate": "2025-05-09T00:00:00",
         "availableUntil": "2025-05-13T00:00:00",
-        "displayGradeAs": "Points",
-        "submissionType": "Online",
-        "onlineEntryOptions": ["Media Recordings", "Website URL"],
-        "assignTo": "Everyone"
+        "displayGradeAs": "Points"
       },
       {
         "_id": "A002",
@@ -26,10 +23,7 @@
         "availableFrom": "2025-06-04T00:00:00",
         "dueDate": "2025-06-13T00:00:00",
         "availableUntil": "2025-06-18T00:00:00",
-        "displayGradeAs": "Letter Grade",
-        "submissionType": "External Tool",
-        "onlineEntryOptions": [],
-        "assignTo": "Everyone"
+        "displayGradeAs": "Letter Grade"
       }
     ]
   },
@@ -47,10 +41,7 @@
         "availableFrom": "2025-05-04T00:00:00",
         "dueDate": "2025-05-14T00:00:00",
         "availableUntil": "2025-05-19T00:00:00",
-        "displayGradeAs": "Percentage",
-        "submissionType": "On Paper",
-        "onlineEntryOptions": [],
-        "assignTo": "Everyone"
+        "displayGradeAs": "Percentage"
       }
     ]
   },
@@ -68,10 +59,7 @@
         "availableFrom": "2025-05-01T00:00:00",
         "dueDate": "2025-05-15T23:59:00",
         "availableUntil": "2025-05-20T23:59:00",
-        "displayGradeAs": "Percentage",
-        "submissionType": "Online",
-        "onlineEntryOptions": ["Website URL"],
-        "assignTo": "Everyone"
+        "displayGradeAs": "Percentage"
       },
       {
         "_id": "A005",
@@ -81,10 +69,7 @@
         "availableFrom": "2025-05-01T00:00:00",
         "dueDate": "2025-05-15T23:59:00",
         "availableUntil": "2025-05-20T23:59:00",
-        "displayGradeAs": "Percentage",
-        "submissionType": "Online",
-        "onlineEntryOptions": ["Website URL"],
-        "assignTo": "Everyone"
+        "displayGradeAs": "Percentage"
       }
     ]
   },

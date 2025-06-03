@@ -8,6 +8,7 @@ import {
   deleteAssignmentGroup,
   updateAssignmentGroup,
   addAssignmentGroup,
+  deleteAssignment,
 } from "../Assignments/reducer";
 import AssignmentGroupEditor from "./AssignmentGroupEditor";
 import AssignmentsControls from "./AssignmentsControls";
@@ -35,7 +36,6 @@ export default function Assignments() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // State for the AssignmentGroupEditor modal
   const [showGroupEditorModal, setShowGroupEditorModal] = useState(false);
   const [currentGroupToEdit, setCurrentGroupToEdit] = useState<any>(null);
   const [editorMode, setEditorMode] = useState<"add" | "edit">("add");
@@ -87,6 +87,16 @@ export default function Assignments() {
       )
     ) {
       dispatch(deleteAssignmentGroup(groupId));
+    }
+  };
+
+  const handleEditAssignment = (groupId: string, assignmentId: string) => {
+    navigate(`/Kambaz/Courses/${cid}/Assignments/${assignmentId}`);
+  };
+
+  const handleDeleteAssignment = (groupId: string, assignmentId: string) => {
+    if (window.confirm("Are you sure you want to remove this assignment?")) {
+      dispatch(deleteAssignment({ groupId, assignmentId }));
     }
   };
 
@@ -152,7 +162,12 @@ export default function Assignments() {
                         </div>
                       </Col>
                       <Col xs="auto">
-                        <AssignmentItemControlButtons />
+                        <AssignmentItemControlButtons
+                          groupId={g._id}
+                          assignmentId={a._id}
+                          onEdit={handleEditAssignment}
+                          onDelete={handleDeleteAssignment}
+                        />
                       </Col>
                     </Row>
                   </ListGroup.Item>
