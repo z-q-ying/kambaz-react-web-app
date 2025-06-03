@@ -90,7 +90,7 @@ export default function Assignments() {
     }
   };
 
-  const handleEditAssignment = (groupId: string, assignmentId: string) => {
+  const handleEditAssignment = (assignmentId: string) => {
     navigate(`/Kambaz/Courses/${cid}/Assignments/${assignmentId}`);
   };
 
