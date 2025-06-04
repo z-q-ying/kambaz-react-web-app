@@ -3,11 +3,19 @@ import { FormControl, ListGroup } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
-import { addModule, editModule, updateModule, deleteModule } from "./reducer";
+import {
+  addModule,
+  editModule,
+  updateModule,
+  deleteModule,
+  deleteLesson,
+  editLesson,
+  updateLesson,
+  addLesson,
+} from "./reducer";
+import LessonControlButtons from "./LessonControlButtons";
 import ModulesControls from "./ModulesControls";
 import ModuleControlButtons from "./ModuleControlButtons";
-
-// import LessonControlButtons from "./LessonControlButtons";
 
 export default function Modules() {
   const { cid } = useParams();
@@ -65,8 +73,10 @@ export default function Modules() {
                     dispatch(deleteModule(moduleId));
                   }}
                   editModule={(moduleId) => dispatch(editModule(moduleId))}
+                  addLesson={(moduleId) => dispatch(addLesson({ moduleId }))}
                 />
               </div>
+
               {module.lessons && (
                 <ListGroup className="wd-lessons rounded-0">
                   {module.lessons.map((lesson: any) => (
@@ -75,13 +85,46 @@ export default function Modules() {
                       className="wd-lesson p-3 ps-1"
                     >
                       <BsGripVertical className="me-2 fs-3" />
-                      {lesson.name}
-                      {/* TODO */}
-                      {/* <LessonControlButtons
+                      {/* If not editing, show the name */}
+                      {!lesson.editing && lesson.name}
+                      {/* If editing, show the FormControl */}
+                      {lesson.editing && (
+                        <FormControl
+                          className="w-50 d-inline-block"
+                          // TODO: add a placeholder?
+                          placeholder="Lesson name e.g., 'Introduction to React'"
+                          onChange={(e) =>
+                            dispatch(
+                              updateLesson({
+                                moduleId: module._id,
+                                lesson: { ...lesson, name: e.target.value },
+                              })
+                            )
+                          }
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              dispatch(
+                                updateLesson({
+                                  moduleId: module._id,
+                                  lesson: { ...lesson, editing: false },
+                                })
+                              );
+                            }
+                          }}
+                          value={lesson.name}
+                        />
+                      )}
+                      <LessonControlButtons
+                        moduleId={module._id}
                         lessonId={lesson._id}
-                        deleteLesson={deleteLesson}
-                        editLesson={editLesson}
-                      /> */}
+                        onEdit={
+                          (moduleId, lessonId) =>
+                            dispatch(editLesson({ moduleId, lessonId })) // set editing state to true
+                        }
+                        onDelete={(moduleId, lessonId) =>
+                          dispatch(deleteLesson({ moduleId, lessonId }))
+                        }
+                      />
                     </ListGroup.Item>
                   ))}
                 </ListGroup>

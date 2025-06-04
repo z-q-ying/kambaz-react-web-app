@@ -1,7 +1,7 @@
 import { IoEllipsisVertical } from "react-icons/io5";
 import AssignmentGreenCheckmark from "./AssignmentGreenCheckmark";
-import { Dropdown } from "react-bootstrap"; // Import Dropdown
-import { FaPencilAlt, FaTrash } from "react-icons/fa"; // Import icons for Edit and Delete
+import { Dropdown } from "react-bootstrap";
+import { FaPencilAlt, FaTrash } from "react-icons/fa";
 
 export default function AssignmentItemControlButtons({
   groupId,
@@ -11,7 +11,7 @@ export default function AssignmentItemControlButtons({
 }: {
   groupId: string;
   assignmentId: string;
-  onEdit: (groupId: string, assignmentId: string) => void;
+  onEdit: (assignmentId: string) => void;
   onDelete: (groupId: string, assignmentId: string) => void;
 }) {
   return (
@@ -29,7 +29,7 @@ export default function AssignmentItemControlButtons({
         </Dropdown.Toggle>
 
         <Dropdown.Menu>
-          <Dropdown.Item onClick={() => onEdit(groupId, assignmentId)}>
+          <Dropdown.Item onClick={() => onEdit(assignmentId)}>
             <FaPencilAlt className="me-2" /> Edit
           </Dropdown.Item>
           <Dropdown.Item onClick={() => onDelete(groupId, assignmentId)}>

@@ -118,6 +118,7 @@ export default function Assignments() {
                   {g.groupName}
                 </div>
                 <AssignmentGroupControlButtons
+                  cid={g.courseId}
                   groupId={g._id}
                   groupName={g.groupName}
                   weight={g.weight}

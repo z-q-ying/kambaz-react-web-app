@@ -64,7 +64,7 @@ export default function AssignmentsControls({
                 style={{ bottom: "1px" }}
               />
               Assignment
-            </Button>{" "}
+            </Button>
           </>
         )}
       </div>

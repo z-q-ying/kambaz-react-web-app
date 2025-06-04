@@ -2,25 +2,34 @@ import { IoEllipsisVertical } from "react-icons/io5";
 import { FaPlus } from "react-icons/fa6";
 import { Dropdown } from "react-bootstrap";
 import { FaPencilAlt, FaTrash } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import "../../styles.css";
 
 export default function AssignmentGroupControlButtons({
+  cid,
   groupId,
   groupName,
   weight,
   onEdit,
   onDelete,
 }: {
+  cid: string;
   groupId: string;
   groupName: string;
   weight: number;
   onEdit: (groupId: string, groupName: string, weight: number) => void;
   onDelete: (groupId: string) => void;
 }) {
+  const navigate = useNavigate();
   return (
     <div className="d-flex align-items-center gap-2">
       <div className="px-3 border rounded-pill">{weight}% of Total</div>
-      <FaPlus className="fs-5" />
+      <FaPlus
+        className="fs-5"
+        onClick={() =>
+          navigate(`/Kambaz/Courses/${cid}/Assignments/new?group=${groupId}`)
+        }
+      />
 
       {/* Dropdown upon the Ellipsis being clikced */}
       <Dropdown>

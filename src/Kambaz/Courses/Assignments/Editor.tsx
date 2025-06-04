@@ -194,11 +194,13 @@ export default function AssignmentEditor() {
             >
               {/* Ensure assignmentGroups is not empty before mapping */}
               {assignmentGroups.length > 0 ? (
-                assignmentGroups.map((groupOption: any) => (
-                  <option key={groupOption._id} value={groupOption._id}>
-                    {groupOption.groupName}
-                  </option>
-                ))
+                assignmentGroups
+                  .filter((g: any) => g.courseId === cid)
+                  .map((groupOption: any) => (
+                    <option key={groupOption._id} value={groupOption._id}>
+                      {groupOption.groupName}
+                    </option>
+                  ))
               ) : (
                 <option value="">No Groups Available</option>
               )}

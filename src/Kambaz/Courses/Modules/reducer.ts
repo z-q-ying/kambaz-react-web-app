@@ -10,12 +10,13 @@ const modulesSlice = createSlice({
   name: "modules",
   initialState,
   reducers: {
+    // Modules
     addModule: (state, { payload: module }) => {
       const newModule: any = {
         _id: uuidv4(),
-        lessons: [],
-        name: module.name,
         course: module.course,
+        name: module.name,
+        lessons: [],
       };
       state.modules = [...state.modules, newModule] as any;
     },
@@ -32,10 +33,74 @@ const modulesSlice = createSlice({
         m._id === moduleId ? { ...m, editing: true } : m
       ) as any;
     },
+    // Lessons
+    addLesson: (state, { payload: { moduleId } }) => {
+      state.modules = state.modules.map((module: any) =>
+        module._id === moduleId
+          ? {
+              ...module,
+              lessons: [
+                ...(module.lessons || []),
+                {
+                  _id: uuidv4(),
+                  name: "",
+                  description: "",
+                  editing: true,
+                  module: moduleId,
+                },
+              ],
+            }
+          : module
+      );
+    },
+    deleteLesson: (state, { payload: { moduleId, lessonId } }) => {
+      state.modules = state.modules.map((module: any) =>
+        module._id === moduleId
+          ? {
+              ...module,
+              lessons: module.lessons.filter(
+                (lesson: any) => lesson._id !== lessonId
+              ),
+            }
+          : module
+      ) as any;
+    },
+    updateLesson: (state, { payload: { moduleId, lesson } }) => {
+      state.modules = state.modules.map((module: any) =>
+        module._id === moduleId
+          ? {
+              ...module,
+              lessons: module.lessons.map((l: any) =>
+                l._id === lesson._id ? lesson : l
+              ),
+            }
+          : module
+      ) as any;
+    },
+    editLesson: (state, { payload: { moduleId, lessonId } }) => {
+      state.modules = state.modules.map((module: any) =>
+        module._id === moduleId
+          ? {
+              ...module,
+              lessons: module.lessons.map((lesson: any) =>
+                lesson._id === lessonId ? { ...lesson, editing: true } : lesson
+              ),
+            }
+          : module
+      ) as any;
+    },
   },
 });
 
-export const { addModule, deleteModule, updateModule, editModule } =
-  modulesSlice.actions;
+export const {
+  addModule,
+  deleteModule,
+  updateModule,
+  editModule,
+  addLesson,
+  deleteLesson,
+  updateLesson,
+  editLesson,
+} = modulesSlice.actions;
 
 export default modulesSlice.reducer;
