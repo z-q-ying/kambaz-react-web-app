@@ -37,7 +37,8 @@ export default function AssignmentEditor() {
     title: "",
     description: "",
     points: 0,
-    assignmentGroup: assignmentGroups[0]?._id || "",
+    assignmentGroupId: currentGroup?._id || "",
+    assignmentGroupName: currentGroup?.groupName || "",
     displayGradeAs: "Percentage",
     availableFrom: "",
     dueDate: "",
@@ -51,7 +52,8 @@ export default function AssignmentEditor() {
         title: currentAssignment.title || "",
         description: currentAssignment.description || "",
         points: currentAssignment.points || 0,
-        assignmentGroup: currentGroup?._id || "",
+        assignmentGroupId: currentGroup?._id || "",
+        assignmentGroupName: currentGroup?.groupName || "",
         displayGradeAs: currentAssignment.displayGradeAs || "Percentage",
         availableFrom: formatDateTime(currentAssignment.availableFrom) || "",
         dueDate: formatDateTime(currentAssignment.dueDate) || "",
@@ -59,13 +61,16 @@ export default function AssignmentEditor() {
       });
     } else {
       // No aid => add mode
+      const initialGroup = assignmentGroups.find(
+        (g: any) => g.courseId === cid
+      );
       setFormData({
         title: "",
         description: "",
         points: 0,
-        assignmentGroup: assignmentGroups[0]?._id || "",
+        assignmentGroupId: initialGroup?._id || "",
+        assignmentGroupName: initialGroup?.groupName || "",
         displayGradeAs: "Percentage",
-
         availableFrom: "",
         dueDate: "",
         availableUntil: "",
@@ -93,6 +98,19 @@ export default function AssignmentEditor() {
     }
   };
 
+  // Update Assignment Group Name and Assignment Group Id
+  const handleGroupChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedGroupId = e.target.value;
+    const selectedGroup = assignmentGroups.find(
+      (group: any) => group._id === selectedGroupId
+    );
+    setFormData((prev) => ({
+      ...prev,
+      assignmentGroupId: selectedGroup?._id || "",
+      assignmentGroupName: selectedGroup?.groupName || "",
+    }));
+  };
+
   const handleSave = () => {
     if (aid && aid !== "new") {
       const updatedAssignment = {
@@ -112,7 +130,7 @@ export default function AssignmentEditor() {
       };
       dispatch(
         updateAssignment({
-          groupId: formData.assignmentGroup,
+          groupId: formData.assignmentGroupId,
           assignment: updatedAssignment,
         })
       ); //
@@ -132,7 +150,7 @@ export default function AssignmentEditor() {
       };
       dispatch(
         addAssignment({
-          groupId: formData.assignmentGroup,
+          groupId: formData.assignmentGroupId,
           assignment: newAssignment,
         })
       );
@@ -188,12 +206,12 @@ export default function AssignmentEditor() {
           </Form.Label>
           <Col sm={9}>
             <Form.Select
-              name="assignmentGroup"
-              value={formData.assignmentGroup}
-              onChange={handleChange}
+              name="assignmentGroupId"
+              value={formData.assignmentGroupId}
+              onChange={handleGroupChange}
             >
-              {/* Ensure assignmentGroups is not empty before mapping */}
-              {assignmentGroups.length > 0 ? (
+              {assignmentGroups.filter((g: any) => g.courseId === cid).length >
+              0 ? (
                 assignmentGroups
                   .filter((g: any) => g.courseId === cid)
                   .map((groupOption: any) => (
@@ -202,7 +220,9 @@ export default function AssignmentEditor() {
                     </option>
                   ))
               ) : (
-                <option value="">No Groups Available</option>
+                <option value="">
+                  No Groups Available - Please Create a Group First
+                </option>
               )}
             </Form.Select>
           </Col>

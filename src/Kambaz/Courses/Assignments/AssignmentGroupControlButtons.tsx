@@ -26,9 +26,7 @@ export default function AssignmentGroupControlButtons({
       <div className="px-3 border rounded-pill">{weight}% of Total</div>
       <FaPlus
         className="fs-5"
-        onClick={() =>
-          navigate(`/Kambaz/Courses/${cid}/Assignments/new?group=${groupId}`)
-        }
+        onClick={() => navigate(`/Kambaz/Courses/${cid}/Assignments/new`)}
       />
 
       {/* Dropdown upon the Ellipsis being clikced */}
