@@ -1,7 +1,7 @@
 import { AiOutlineDashboard } from "react-icons/ai";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { IoCalendarOutline } from "react-icons/io5";
-import { LiaBookSolid, LiaCogSolid } from "react-icons/lia";
+import { LiaCogSolid } from "react-icons/lia";
 import { Link, useLocation } from "react-router-dom";
 import { ListGroup } from "react-bootstrap";
 import { RiInboxArchiveLine } from "react-icons/ri";
@@ -10,7 +10,8 @@ export default function KambazNavigation() {
   const { pathname } = useLocation();
   const links = [
     { label: "Dashboard", path: "/Kambaz/Dashboard", icon: AiOutlineDashboard },
-    { label: "Courses", path: "/Kambaz/Dashboard", icon: LiaBookSolid },
+    // TODO: To fix this one
+    // { label: "Courses", path: "/Kambaz/Dashboard", icon: LiaBookSolid },
     { label: "Calendar", path: "/Kambaz/Calendar", icon: IoCalendarOutline },
     { label: "Inbox", path: "/Kambaz/Inbox", icon: RiInboxArchiveLine },
     { label: "Labs", path: "/Labs", icon: LiaCogSolid },

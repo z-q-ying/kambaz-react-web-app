@@ -1,10 +1,12 @@
 import { FaUserCircle } from "react-icons/fa";
 import { Table } from "react-bootstrap";
 import { useParams } from "react-router-dom";
-import { enrollments, users } from "../../Database";
+import { useSelector } from "react-redux";
+import { users } from "../../Database";
 
 export default function PeopleTable() {
   const { cid } = useParams();
+  const { enrollments } = useSelector((state: any) => state.accountReducer);
   return (
     <div id="wd-people-table">
       <Table striped>
@@ -22,7 +24,7 @@ export default function PeopleTable() {
           {users
             .filter((usr) =>
               enrollments.some(
-                (enrollment) =>
+                (enrollment: any) =>
                   enrollment.user === usr._id && enrollment.course === cid
               )
             )

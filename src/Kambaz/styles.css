@@ -45,3 +45,7 @@ body * {
 .wd-assignment-title-button:hover {
   text-decoration: underline;
 }
+
+.no-caret-toggle::after {
+  display: none !important;
+}
