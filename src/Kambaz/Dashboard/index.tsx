@@ -1,25 +1,20 @@
 import { Button, Card, Col, Form, FormControl, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-import * as db from "../Database";
-
-export default function Dashboard({
-  courses,
-  course,
-  setCourse,
-  addNewCourse,
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addCourse,
   deleteCourse,
+  setCourse,
   updateCourse,
-}: {
-  readonly courses: any[];
-  readonly course: any;
-  readonly setCourse: (course: any) => void;
-  readonly addNewCourse: () => void;
-  readonly deleteCourse: (course: any) => void;
-  readonly updateCourse: () => void;
-}) {
+} from "../Courses/reducer";
+import * as db from "../Database"; // TOOD: Needed for enrollments for now
+
+export default function Dashboard() {
+  const { enrollments } = db; // TODO: TO Refactor
+
+  const { courses, course } = useSelector((state: any) => state.coursesReducer);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
-  const { enrollments } = db;
+  const dispatch = useDispatch();
 
   return (
     <div id="wd-dashboard">
@@ -30,14 +25,14 @@ export default function Dashboard({
           variant="primary"
           className="float-end"
           id="wd-add-new-course-click"
-          onClick={addNewCourse}
+          onClick={() => dispatch(addCourse(course))}
         >
           Add
         </Button>
         <Button
           variant="warning"
           className="float-end me-2"
-          onClick={updateCourse}
+          onClick={() => dispatch(updateCourse(course))}
           id="wd-update-course-click"
         >
           Update
@@ -48,7 +43,9 @@ export default function Dashboard({
         value={course.name}
         className="mb-2"
         placeholder="Course Name"
-        onChange={(e) => setCourse({ ...course, name: e.target.value })}
+        onChange={(e) =>
+          dispatch(setCourse({ ...course, name: e.target.value }))
+        }
       />
       <FormControl
         value={course.description}
@@ -56,7 +53,9 @@ export default function Dashboard({
         as="textarea"
         className="mb-2"
         placeholder="Course Description"
-        onChange={(e) => setCourse({ ...course, description: e.target.value })}
+        onChange={(e) =>
+          dispatch(setCourse({ ...course, description: e.target.value }))
+        }
       />
       <Form.Group as={Row} className="mb-2" controlId="courseNumber">
         <Form.Label column sm="3">
@@ -66,7 +65,9 @@ export default function Dashboard({
           <FormControl
             value={course.number}
             placeholder="e.g., RS321"
-            onChange={(e) => setCourse({ ...course, number: e.target.value })}
+            onChange={(e) =>
+              dispatch(setCourse({ ...course, number: e.target.value }))
+            }
           />
         </Col>
       </Form.Group>
@@ -79,7 +80,7 @@ export default function Dashboard({
             value={course.startDate}
             type="date"
             onChange={(e) =>
-              setCourse({ ...course, startDate: e.target.value })
+              dispatch(setCourse({ ...course, startDate: e.target.value }))
             }
           />
         </Col>
@@ -92,7 +93,9 @@ export default function Dashboard({
           <FormControl
             value={course.endDate}
             type="date"
-            onChange={(e) => setCourse({ ...course, endDate: e.target.value })}
+            onChange={(e) =>
+              dispatch(setCourse({ ...course, endDate: e.target.value }))
+            }
           />
         </Col>
       </Form.Group>
@@ -104,7 +107,9 @@ export default function Dashboard({
           <FormControl
             value={course.image}
             placeholder="e.g., /images/reactjs.jpg"
-            onChange={(e) => setCourse({ ...course, image: e.target.value })}
+            onChange={(e) =>
+              dispatch(setCourse({ ...course, image: e.target.value }))
+            }
           />
         </Col>
       </Form.Group>
@@ -114,41 +119,42 @@ export default function Dashboard({
       <div id="wd-dashboard-courses">
         <Row xs={1} md={5} className="g-4">
           {courses
+            // For dev purposes only, comment out the filter
             .filter(
-              (course) =>
-                currentUser && // avoid currentUser being undefined
+              (c: any) =>
+                currentUser &&
                 enrollments.some(
-                  (enrollment) =>
+                  (enrollment: any) =>
                     enrollment.user === currentUser._id &&
-                    enrollment.course === course._id
+                    enrollment.course === c._id
                 )
             )
-            .map((course) => (
+            .map((c: any) => (
               <Col
-                key={course._id}
+                key={c._id}
                 className="wd-dashboard-course"
                 style={{ width: "300px" }}
               >
                 <Card>
                   <Link
-                    to={`/Kambaz/Courses/${course._id}/Home`}
+                    to={`/Kambaz/Courses/${c._id}/Home`}
                     className="wd-dashboard-course-link text-decoration-none text-dark"
                   >
                     <Card.Img
-                      src={course.image || "/images/reactjs.jpg"}
+                      src={c.image || "/images/reactjs.jpg"}
                       variant="top"
                       width="100%"
                       height={160}
                     />
                     <Card.Body className="card-body">
                       <Card.Title className="wd-dashboard-course-title text-nowrap overflow-hidden">
-                        {course.name}
+                        {c.name}
                       </Card.Title>
                       <Card.Text
                         className="wd-dashboard-course-description overflow-hidden"
                         style={{ height: "100px" }}
                       >
-                        {course.description}
+                        {c.description}
                       </Card.Text>
                       <Button variant="primary"> Go </Button>
 
@@ -157,7 +163,7 @@ export default function Dashboard({
                         className="float-end"
                         onClick={(event) => {
                           event.preventDefault();
-                          deleteCourse(course._id);
+                          dispatch(deleteCourse(c._id));
                         }}
                         id="wd-delete-course-click"
                       >
@@ -169,7 +175,7 @@ export default function Dashboard({
                         id="wd-edit-course-click"
                         onClick={(event) => {
                           event.preventDefault();
-                          setCourse(course);
+                          dispatch(setCourse(c));
                         }}
                       >
                         Edit
