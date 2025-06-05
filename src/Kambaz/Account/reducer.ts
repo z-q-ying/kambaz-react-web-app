@@ -1,4 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { enrollments } from "../Database";
+import { v4 as uuidv4 } from "uuid";
 
 // For dev and testing purposes
 // const defaultTestUser = {
@@ -21,6 +23,7 @@ const initialState = {
   currentUser: null,
   // For dev and testing, use this profile
   // currentUser: defaultTestUser,
+  enrollments: enrollments,
 };
 
 const accountSlice = createSlice({
@@ -30,9 +33,29 @@ const accountSlice = createSlice({
     setCurrentUser: (state, action) => {
       state.currentUser = action.payload;
     },
+    addEnrollment: (state, action) => {
+      const { userId, courseId } = action.payload;
+      const exists = state.enrollments.some(
+        (e: any) => e.user === userId && e.course === courseId
+      );
+      if (!exists) {
+        state.enrollments.push({
+          _id: uuidv4(),
+          user: userId,
+          course: courseId,
+        });
+      }
+    },
+    removeEnrollment: (state, action) => {
+      const { userId, courseId } = action.payload;
+      state.enrollments = state.enrollments.filter(
+        (e: any) => !(e.user === userId && e.course === courseId)
+      );
+    },
   },
 });
 
-export const { setCurrentUser } = accountSlice.actions;
+export const { setCurrentUser, addEnrollment, removeEnrollment } =
+  accountSlice.actions;
 
 export default accountSlice.reducer;
