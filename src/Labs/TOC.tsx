@@ -10,6 +10,7 @@ export default function TOC() {
     { to: "/Labs/Lab2", id: "wd-a2", display: "Lab 2", activeCheck: "Lab2" },
     { to: "/Labs/Lab3", id: "wd-a3", display: "Lab 3", activeCheck: "Lab3" },
     { to: "/Labs/Lab4", id: "wd-a4", display: "Lab 4", activeCheck: "Lab4" },
+    { to: "/Labs/Lab5", id: "wd-a5", display: "Lab 5", activeCheck: "Lab5" },
   ];
 
   return (
@@ -33,7 +34,7 @@ export default function TOC() {
       </Nav.Item>
       <Nav.Item>
         <Nav.Link
-          href="https://github.com/z-q-ying/kanbas-react-web-app"
+          href="https://github.com/z-q-ying/kambaz-react-web-app"
           target="_blank"
           active={false}
         >
