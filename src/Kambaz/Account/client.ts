@@ -37,3 +37,15 @@ export const updateUser = async (user: any) => {
   );
   return response.data;
 };
+
+export const findMyCourses = async () => {
+  const { data } = await axiosWithCredentials.get(
+    `${USERS_API}/current/courses`
+  );
+  return data;
+};
+
+export const findAllUsers = async () => {
+  const { data } = await axios.get(`${USERS_API}`);
+  return data;
+};
