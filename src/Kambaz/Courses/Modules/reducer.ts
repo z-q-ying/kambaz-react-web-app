@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
 
 const initialState = {
-  modules: [],
+  modules: [] as any[], // Assert an array of any object for modules
 };
 
 const modulesSlice = createSlice({
