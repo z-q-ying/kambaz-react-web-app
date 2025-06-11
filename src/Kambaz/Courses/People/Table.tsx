@@ -1,31 +1,28 @@
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
 import { Table } from "react-bootstrap";
 
-import { setAllUsers } from "../../Account/reducer";
-import * as usersClient from "../../Account/client";
+import * as coursesClient from "../client";
 
 export default function PeopleTable() {
   const { cid } = useParams();
-  const { users, enrollments } = useSelector(
-    (state: any) => state.accountReducer
-  );
-  const dispatch = useDispatch();
+  const [enrolledUsers, setEnrolledUsers] = useState([]);
 
-  const fetchAllUsers = async () => {
+  // Use courses.fetchAllEnrolledUsers(cid) to fetch enrolled users
+  const fetchAllEnrolledUsers = async () => {
     try {
-      const allUsers = await usersClient.getAllUsers();
-      dispatch(setAllUsers(allUsers));
+      const response = await coursesClient.findEnrolledUsersInCourse(cid);
+      setEnrolledUsers(response);
     } catch (error) {
-      console.error("!!! Error fetching users:", error);
+      console.error("Error fetching enrolled users:", error);
     }
   };
 
+  // Fetch enrolled users when the component mounts
   useEffect(() => {
-    fetchAllUsers();
-  }, []);
+    fetchAllEnrolledUsers();
+  }, [cid]);
 
   return (
     <div id="wd-people-table">
@@ -41,14 +38,8 @@ export default function PeopleTable() {
           </tr>
         </thead>
         <tbody>
-          {users
-            .filter((usr: any) =>
-              enrollments.some(
-                (enrollment: any) =>
-                  enrollment.user === usr._id && enrollment.course === cid
-              )
-            )
-            .map((user: any) => (
+          {enrolledUsers &&
+            enrolledUsers.map((user: any) => (
               <tr key={user._id}>
                 <td className="wd-full-name text-nowrap">
                   <FaUserCircle className="me-2 fs-1 text-secondary" />

@@ -36,7 +36,6 @@ export default function Dashboard() {
   const fetchCourses = async () => {
     try {
       const fetchedCourses = await coursesClient.fetchAllCourses();
-      console.log("!!! All Courses:", fetchedCourses);
       dispatch(setCourses(fetchedCourses));
     } catch (error) {
       console.error("Error fetching courses:", error);
@@ -46,7 +45,6 @@ export default function Dashboard() {
   const fetchEnrolledCourses = async () => {
     try {
       const enrolledCourses = await accountClient.findMyCourses();
-      console.log("!!! Enrolled Courses:", enrolledCourses);
       dispatch(setEnrolledCourses(enrolledCourses));
     } catch (error) {
       console.error("Error fetching enrollments:", error);
@@ -68,8 +66,17 @@ export default function Dashboard() {
     dispatch(updateSpecificCourse(course));
   };
 
+  const enrollCourse = async (courseId: string) => {
+    await accountClient.enrollUserInCourse(courseId);
+    fetchEnrolledCourses();
+  };
+
+  const unenrollCourse = async (courseId: string) => {
+    await accountClient.unenrollUserFromCourse(courseId);
+    fetchEnrolledCourses();
+  };
+
   useEffect(() => {
-    console.log("!!! Rerendering Dashboard");
     fetchCourses();
     fetchEnrolledCourses();
   }, []);
@@ -225,12 +232,7 @@ export default function Dashboard() {
                             variant="secondary"
                             onClick={(event) => {
                               event.preventDefault();
-                              dispatch(
-                                removeEnrollment({
-                                  userId: currentUser._id,
-                                  courseId: c._id,
-                                })
-                              );
+                              unenrollCourse(c._id);
                             }}
                           >
                             Unenroll
@@ -240,12 +242,7 @@ export default function Dashboard() {
                             variant="success"
                             onClick={(event) => {
                               event.preventDefault();
-                              dispatch(
-                                addEnrollment({
-                                  userId: currentUser._id,
-                                  courseId: c._id,
-                                })
-                              );
+                              enrollCourse(c._id);
                             }}
                           >
                             Enroll
