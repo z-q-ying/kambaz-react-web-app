@@ -26,11 +26,6 @@ export default function Modules() {
   const [moduleName, setModuleName] = useState("");
   const dispatch = useDispatch();
 
-  const fetchModules = async () => {
-    const modules = await coursesClient.findModulesForCourse(cid as string);
-    dispatch(setModules(modules));
-  };
-
   const createModuleForCourse = async () => {
     if (!cid) return;
     const newModule = { name: moduleName, course: cid };
@@ -47,6 +42,11 @@ export default function Modules() {
   const saveModule = async (module: any) => {
     await modulesClient.updateModule(module);
     dispatch(updateModule(module));
+  };
+
+  const fetchModules = async () => {
+    const modules = await coursesClient.findModulesForCourse(cid as string);
+    dispatch(setModules(modules));
   };
 
   useEffect(() => {

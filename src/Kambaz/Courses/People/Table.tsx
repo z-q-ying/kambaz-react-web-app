@@ -1,12 +1,32 @@
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
 import { Table } from "react-bootstrap";
-import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { users } from "../../Database";
+
+import { setAllUsers } from "../../Account/reducer";
+import * as usersClient from "../../Account/client";
 
 export default function PeopleTable() {
   const { cid } = useParams();
-  const { enrollments } = useSelector((state: any) => state.accountReducer);
+  const { users, enrollments } = useSelector(
+    (state: any) => state.accountReducer
+  );
+  const dispatch = useDispatch();
+
+  const fetchAllUsers = async () => {
+    try {
+      const allUsers = await usersClient.getAllUsers();
+      dispatch(setAllUsers(allUsers));
+    } catch (error) {
+      console.error("!!! Error fetching users:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllUsers();
+  }, []);
+
   return (
     <div id="wd-people-table">
       <Table striped>
@@ -22,7 +42,7 @@ export default function PeopleTable() {
         </thead>
         <tbody>
           {users
-            .filter((usr) =>
+            .filter((usr: any) =>
               enrollments.some(
                 (enrollment: any) =>
                   enrollment.user === usr._id && enrollment.course === cid

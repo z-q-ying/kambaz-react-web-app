@@ -38,6 +38,11 @@ export const updateUser = async (user: any) => {
   return response.data;
 };
 
+export const getAllUsers = async () => {
+  const { data } = await axios.get(`${USERS_API}`);
+  return data;
+};
+
 export const findMyCourses = async () => {
   const { data } = await axiosWithCredentials.get(
     `${USERS_API}/current/courses`
@@ -45,7 +50,10 @@ export const findMyCourses = async () => {
   return data;
 };
 
-export const findAllUsers = async () => {
-  const { data } = await axios.get(`${USERS_API}`);
+export const createCourse = async (course: any) => {
+  const { data } = await axiosWithCredentials.post(
+    `${USERS_API}/current/courses`, // Use session to fetch current user
+    course
+  );
   return data;
 };

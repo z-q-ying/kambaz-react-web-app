@@ -33,6 +33,7 @@ export default function Profile() {
   useEffect(() => {
     fetchProfile();
   }, []);
+
   return (
     <div className="wd-profile-screen">
       <h3>Profile</h3>

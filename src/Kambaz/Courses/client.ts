@@ -23,3 +23,15 @@ export const createModuleForCourse = async (courseId: string, module: any) => {
   );
   return response.data;
 };
+
+// Delete a course by its ID
+export const deleteCourse = async (id: string) => {
+  const response = await axios.delete(`${COURSES_API}/${id}`);
+  return response.data;
+};
+
+// Update an existing course
+export const updateCourse = async (course: any) => {
+  const response = await axios.put(`${COURSES_API}/${course._id}`, course);
+  return response.data;
+};
