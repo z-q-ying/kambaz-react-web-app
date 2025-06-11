@@ -11,7 +11,6 @@ import {
   deleteCourse as deleteSpecificCourse,
   updateCourse as updateSpecificCourse,
 } from "../Courses/reducer";
-import { addEnrollment, removeEnrollment } from "../Account/reducer";
 
 import * as coursesClient from "../Courses/client";
 import * as accountClient from "../Account/client";
