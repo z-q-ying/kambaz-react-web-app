@@ -220,7 +220,7 @@ export default function Dashboard() {
 
                     <div className="d-flex justify-content-between">
                       {currentUser &&
-                        (enrolledCourses.some((ec) => ec._id === c._id) ? (
+                        (enrolledCourses.some((ec: any) => ec._id === c._id) ? (
                           <Button
                             variant="secondary"
                             onClick={(event) => {
