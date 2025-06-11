@@ -37,7 +37,7 @@ export const updateCourse = async (course: any) => {
 };
 
 // Find all enrolled users in a course by course ID
-export const findEnrolledUsersInCourse = async (courseId: string) => {
+export const findEnrolledUsersInCourse = async (courseId: any) => {
   const response = await axios.get(`${COURSES_API}/${courseId}/enrollments`);
   return response.data;
 };
