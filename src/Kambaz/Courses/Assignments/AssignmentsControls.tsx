@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 export default function AssignmentsControls({
   onAddGroup,
 }: {
-  onAddGroup: () => void; // Function to call for the "+ Group" button
+  readonly onAddGroup: () => void;
 }) {
   const { cid } = useParams();
   const navigate = useNavigate();

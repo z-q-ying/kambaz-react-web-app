@@ -2,7 +2,8 @@ import { Button, Col, Form, Row } from "react-bootstrap";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
-import { addAssignment, updateAssignment } from "./reducer";
+import { addAssignment, setAssignmentGroups } from "./reducer";
+import * as assignmentsClient from "./client";
 
 function formatDateTime(dt?: string): string {
   if (!dt) return "";
@@ -111,51 +112,51 @@ export default function AssignmentEditor() {
     }));
   };
 
-  const handleSave = () => {
-    if (aid && aid !== "new") {
-      const updatedAssignment = {
-        ...currentAssignment,
-        ...formData,
-        _id: aid,
+  const handleSave = async () => {
+    const assmtAllData = constructAssignmentItem();
+    const { assignmentGroupId, assignmentGroupName, ...assignmentData } =
+      assmtAllData;
+    console.log("!!! Editor: groupId:", assignmentGroupId);
+    console.log("!!! Editor: groupName:", assignmentGroupName);
+    console.log("!!! Editor: Saving assignment with data:", assignmentData);
 
-        availableFrom: formData.availableFrom
-          ? new Date(formData.availableFrom).toISOString()
-          : "", //
-        dueDate: formData.dueDate
-          ? new Date(formData.dueDate).toISOString()
-          : "", //
-        availableUntil: formData.availableUntil
-          ? new Date(formData.availableUntil).toISOString()
-          : "", //
-      };
-      dispatch(
-        updateAssignment({
-          groupId: formData.assignmentGroupId,
-          assignment: updatedAssignment,
-        })
-      ); //
-    } else {
-      const newAssignment = {
-        ...formData, //
-
-        availableFrom: formData.availableFrom
-          ? new Date(formData.availableFrom).toISOString()
-          : "", //
-        dueDate: formData.dueDate
-          ? new Date(formData.dueDate).toISOString()
-          : "", //
-        availableUntil: formData.availableUntil
-          ? new Date(formData.availableUntil).toISOString()
-          : "", //
-      };
+    // Distinguish between new and existing assignments
+    if (aid && aid === "new") {
+      const res = await assignmentsClient.createAssignmentItem(
+        assignmentGroupId,
+        assignmentData
+      );
       dispatch(
         addAssignment({
-          groupId: formData.assignmentGroupId,
-          assignment: newAssignment,
+          groupId: assignmentGroupId,
+          assignment: res,
         })
       );
+    } else {
+      // Update existing assignment
+      const res = await assignmentsClient.updateAssignmentItem(assmtAllData);
+      console.log("!!! Editor: Updated assignment response:", res);
+      const asgmtGroups = await assignmentsClient.findAssignmentsForCourse(
+        cid as string
+      );
+      dispatch(setAssignmentGroups(asgmtGroups));
     }
     navigate(`/Kambaz/Courses/${cid}/Assignments`);
+  };
+
+  const constructAssignmentItem = () => {
+    return {
+      ...currentAssignment,
+      ...formData,
+      _id: aid, // aid could be "new" or an existing ID
+      availableFrom: formData.availableFrom
+        ? new Date(formData.availableFrom).toISOString()
+        : "",
+      dueDate: formData.dueDate ? new Date(formData.dueDate).toISOString() : "",
+      availableUntil: formData.availableUntil
+        ? new Date(formData.availableUntil).toISOString()
+        : "",
+    };
   };
 
   return (

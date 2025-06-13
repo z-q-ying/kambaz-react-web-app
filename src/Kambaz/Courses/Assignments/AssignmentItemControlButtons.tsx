@@ -4,15 +4,13 @@ import { Dropdown } from "react-bootstrap";
 import { FaPencilAlt, FaTrash } from "react-icons/fa";
 
 export default function AssignmentItemControlButtons({
-  groupId,
   assignmentId,
   onEdit,
   onDelete,
 }: {
-  groupId: string;
   assignmentId: string;
   onEdit: (assignmentId: string) => void;
-  onDelete: (groupId: string, assignmentId: string) => void;
+  onDelete: (assignmentId: string) => void;
 }) {
   return (
     <div className="d-flex align-items-center gap-2">
@@ -32,7 +30,7 @@ export default function AssignmentItemControlButtons({
           <Dropdown.Item onClick={() => onEdit(assignmentId)}>
             <FaPencilAlt className="me-2" /> Edit
           </Dropdown.Item>
-          <Dropdown.Item onClick={() => onDelete(groupId, assignmentId)}>
+          <Dropdown.Item onClick={() => onDelete(assignmentId)}>
             <FaTrash className="me-2" /> Delete
           </Dropdown.Item>
         </Dropdown.Menu>

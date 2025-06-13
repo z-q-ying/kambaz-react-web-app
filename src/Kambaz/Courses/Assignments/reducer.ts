@@ -1,26 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { assignments as initialAssignmentGroups } from "../../Database";
-import { v4 as uuidv4 } from "uuid";
 
 const initialState = {
-  assignmentGroups: initialAssignmentGroups,
+  assignmentGroups: [] as any[],
 };
 
 const assignmentsSlice = createSlice({
   name: "assignmentGroups",
   initialState,
   reducers: {
-    // Assignment Group Actions
-    addAssignmentGroup: (state, { payload }) => {
-      state.assignmentGroups.push({
-        _id: uuidv4(),
-        ...payload, // groupName, courseId, weight
-        assignments: [],
-      });
+    setAssignmentGroups: (state, action) => {
+      state.assignmentGroups = action.payload;
     },
     updateAssignmentGroup: (state, { payload }) => {
+      const groupId = payload._id;
       state.assignmentGroups = state.assignmentGroups.map((g: any) =>
-        g._id === payload._id ? { ...g, ...payload } : g
+        g._id === groupId ? { ...g, ...payload } : g
       );
     },
     deleteAssignmentGroup: (state, { payload: groupId }) => {
@@ -28,45 +22,21 @@ const assignmentsSlice = createSlice({
         (g: any) => g._id !== groupId
       );
     },
-    // Assignment Item Actions
     addAssignment: (state, { payload }) => {
       const { groupId, assignment } = payload;
       const group = state.assignmentGroups.find((g: any) => g._id === groupId);
       if (group) {
-        group.assignments.push({
-          ...assignment,
-          _id: uuidv4(),
-        });
-      }
-    },
-    deleteAssignment: (state, { payload }) => {
-      const { groupId, assignmentId } = payload;
-      const group = state.assignmentGroups.find((g: any) => g._id === groupId);
-      if (group) {
-        group.assignments = group.assignments.filter(
-          (a: any) => a._id !== assignmentId
-        );
-      }
-    },
-    updateAssignment: (state, { payload }) => {
-      const { groupId, assignment } = payload;
-      const group = state.assignmentGroups.find((g: any) => g._id === groupId);
-      if (group) {
-        group.assignments = group.assignments.map((a: any) =>
-          a._id === assignment._id ? { ...a, ...assignment } : a
-        );
+        group.assignments.push(assignment);
       }
     },
   },
 });
 
 export const {
-  addAssignmentGroup,
+  setAssignmentGroups,
   updateAssignmentGroup,
   deleteAssignmentGroup,
   addAssignment,
-  deleteAssignment,
-  updateAssignment,
 } = assignmentsSlice.actions;
 
 export default assignmentsSlice.reducer;
