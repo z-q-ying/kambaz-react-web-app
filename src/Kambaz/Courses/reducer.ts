@@ -1,9 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { v4 as uuidv4 } from "uuid";
-import { courses } from "../Database";
 
 const initialState = {
-  courses: courses,
+  courses: [] as any[],
+  enrolledCourses: [] as any[],
   course: {
     _id: "0",
     name: "New Course",
@@ -25,13 +24,12 @@ const coursesSlice = createSlice({
     setCourse: (state, action) => {
       state.course = action.payload;
     },
-    // Courses
-    addCourse: (state, { payload: newCourseData }) => {
-      const newCourse: any = {
-        ...newCourseData,
-        _id: uuidv4(),
-      };
-      state.courses = [...state.courses, newCourse] as any;
+    setEnrolledCourses: (state, action) => {
+      state.enrolledCourses = action.payload;
+    },
+    addCourse: (state, { payload: newCourse }) => {
+      state.courses = [...state.courses, newCourse];
+      state.enrolledCourses = [...state.enrolledCourses, newCourse];
       state.course = {
         _id: "0",
         name: "New Course",
@@ -44,11 +42,17 @@ const coursesSlice = createSlice({
     },
     deleteCourse: (state, { payload: courseId }) => {
       state.courses = state.courses.filter((c: any) => c._id !== courseId);
+      state.enrolledCourses = state.enrolledCourses.filter(
+        (c: any) => c._id !== courseId
+      );
     },
     updateCourse: (state, { payload: updatedCourse }) => {
       state.courses = state.courses.map((c: any) =>
         c._id === updatedCourse._id ? updatedCourse : c
-      ) as any;
+      );
+      state.enrolledCourses = state.enrolledCourses.map((c: any) =>
+        c._id === updatedCourse._id ? updatedCourse : c
+      );
       state.course = {
         _id: "0",
         name: "New Course",
@@ -62,6 +66,12 @@ const coursesSlice = createSlice({
   },
 });
 
-export const { setCourses, setCourse, addCourse, deleteCourse, updateCourse } =
-  coursesSlice.actions;
+export const {
+  setCourses,
+  setCourse,
+  setEnrolledCourses,
+  addCourse,
+  deleteCourse,
+  updateCourse,
+} = coursesSlice.actions;
 export default coursesSlice.reducer;

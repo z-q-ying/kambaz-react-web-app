@@ -1,12 +1,29 @@
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
 import { Table } from "react-bootstrap";
-import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { users } from "../../Database";
+
+import * as coursesClient from "../client";
 
 export default function PeopleTable() {
   const { cid } = useParams();
-  const { enrollments } = useSelector((state: any) => state.accountReducer);
+  const [enrolledUsers, setEnrolledUsers] = useState([]);
+
+  // Use courses.fetchAllEnrolledUsers(cid) to fetch enrolled users
+  const fetchAllEnrolledUsers = async () => {
+    try {
+      const response = await coursesClient.findEnrolledUsersInCourse(cid);
+      setEnrolledUsers(response);
+    } catch (error) {
+      console.error("Error fetching enrolled users:", error);
+    }
+  };
+
+  // Fetch enrolled users when the component mounts
+  useEffect(() => {
+    fetchAllEnrolledUsers();
+  }, [cid]);
+
   return (
     <div id="wd-people-table">
       <Table striped>
@@ -21,14 +38,8 @@ export default function PeopleTable() {
           </tr>
         </thead>
         <tbody>
-          {users
-            .filter((usr) =>
-              enrollments.some(
-                (enrollment: any) =>
-                  enrollment.user === usr._id && enrollment.course === cid
-              )
-            )
-            .map((user: any) => (
+          {enrolledUsers &&
+            enrolledUsers.map((user: any) => (
               <tr key={user._id}>
                 <td className="wd-full-name text-nowrap">
                   <FaUserCircle className="me-2 fs-1 text-secondary" />
