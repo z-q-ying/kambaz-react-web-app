@@ -53,8 +53,8 @@ export default function Users() {
       if (role && name) {
         const usersByRole = await client.findUsersByRole(role);
         const usersByName = await client.findUsersByPartialName(name);
-        const filtered = usersByRole.filter((u) =>
-          usersByName.some((n) => n._id === u._id)
+        const filtered = usersByRole.filter((u: any) =>
+          usersByName.some((n: any) => n._id === u._id)
         ); // find the intersection
         setUsers(filtered);
       } else if (role) {
