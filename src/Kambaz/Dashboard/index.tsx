@@ -11,6 +11,11 @@ import {
   deleteCourse as deleteSpecificCourse,
   updateCourse as updateSpecificCourse,
 } from "../Courses/reducer";
+import {
+  formatDateForInput,
+  prepareForRedux,
+  prepareArrayForRedux,
+} from "../../utils/dateUtils";
 
 import * as coursesClient from "../Courses/client";
 import * as accountClient from "../Account/client";
@@ -28,14 +33,18 @@ export default function Dashboard() {
   // Component state management
   const [showAllCourses, setShowAllCourses] = useState(false);
   const getDisplayedCourses = () => {
-    return showAllCourses ? enrolledCourses : courses;
+    return showAllCourses ? courses : enrolledCourses;
   };
 
   // CRUD Hanldlers
   const fetchCourses = async () => {
     try {
       const fetchedCourses = await coursesClient.fetchAllCourses();
-      dispatch(setCourses(fetchedCourses));
+      const coursesWithStringDates = prepareArrayForRedux(fetchedCourses, [
+        "startDate",
+        "endDate",
+      ]);
+      dispatch(setCourses(coursesWithStringDates));
     } catch (error) {
       console.error("Error fetching courses:", error);
     }
@@ -44,7 +53,11 @@ export default function Dashboard() {
   const fetchEnrolledCourses = async () => {
     try {
       const enrolledCourses = await accountClient.findMyCourses();
-      dispatch(setEnrolledCourses(enrolledCourses));
+      const coursesWithStringDates = prepareArrayForRedux(enrolledCourses, [
+        "startDate",
+        "endDate",
+      ]);
+      dispatch(setEnrolledCourses(coursesWithStringDates));
     } catch (error) {
       console.error("Error fetching enrollments:", error);
     }
@@ -52,7 +65,8 @@ export default function Dashboard() {
 
   const addNewCourse = async () => {
     const newCourse = await accountClient.createCourse(currentCourse);
-    dispatch(addCourse(newCourse)); // with _id from the server
+    const courseWithStringDates = prepareForRedux(newCourse);
+    dispatch(addCourse(courseWithStringDates)); // with _id from the server
   };
 
   const deleteCourse = async (courseId: string) => {
@@ -78,7 +92,7 @@ export default function Dashboard() {
   useEffect(() => {
     fetchCourses();
     fetchEnrolledCourses();
-  }, []);
+  }, [currentUser]);
 
   return (
     <div id="wd-dashboard">
@@ -151,7 +165,7 @@ export default function Dashboard() {
         </Form.Label>
         <Col sm="9">
           <FormControl
-            value={currentCourse.startDate}
+            value={formatDateForInput(currentCourse.startDate)}
             type="date"
             onChange={(e) =>
               dispatch(
@@ -167,7 +181,7 @@ export default function Dashboard() {
         </Form.Label>
         <Col sm="9">
           <FormControl
-            value={currentCourse.endDate}
+            value={formatDateForInput(currentCourse.endDate)}
             type="date"
             onChange={(e) =>
               dispatch(setCourse({ ...currentCourse, endDate: e.target.value }))
@@ -263,7 +277,8 @@ export default function Dashboard() {
                         id="wd-edit-course-click"
                         onClick={(event) => {
                           event.preventDefault();
-                          dispatch(setCourse(c));
+                          const courseToEdit = prepareForRedux(c);
+                          dispatch(setCourse(courseToEdit));
                         }}
                       >
                         Edit

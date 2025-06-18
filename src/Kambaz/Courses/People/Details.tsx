@@ -10,7 +10,7 @@ import * as client from "../../Account/client";
 export default function PeopleDetails({
   fetchUsers,
 }: {
-  fetchUsers?: () => void;
+  readonly fetchUsers?: () => void;
 }) {
   const { uid } = useParams();
   const [user, setUser] = useState<any>({});
