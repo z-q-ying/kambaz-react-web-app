@@ -9,10 +9,7 @@ import {
   editModule,
   updateModule,
   deleteModule,
-  deleteLesson,
   editLesson,
-  updateLesson,
-  addLesson,
 } from "./reducer";
 import LessonControlButtons from "./LessonControlButtons";
 import ModulesControls from "./ModulesControls";
@@ -42,6 +39,61 @@ export default function Modules() {
   const saveModule = async (module: any) => {
     await modulesClient.updateModule(module);
     dispatch(updateModule(module));
+  };
+
+  // Add lesson with API call
+  const addLessonToModule = async (moduleId: string) => {
+    const tempLesson = {
+      name: "",
+      editing: true,
+    };
+    try {
+      const updatedModule = await modulesClient.addLessonToModule(
+        moduleId,
+        tempLesson
+      );
+      dispatch(updateModule(updatedModule));
+    } catch (error) {
+      console.error("Error adding lesson:", error);
+      // For error handling, we can manually create a temporary lesson
+      const currentModule = modules.find((m: any) => m._id === moduleId);
+      if (currentModule) {
+        const moduleWithNewLesson = {
+          ...currentModule,
+          lessons: [
+            ...(currentModule.lessons || []),
+            { _id: Date.now().toString(), name: "", editing: true },
+          ],
+        };
+        dispatch(updateModule(moduleWithNewLesson));
+      }
+    }
+  };
+
+  // Save lesson with API call
+  const saveLessonInModule = async (moduleId: string, lesson: any) => {
+    try {
+      const updatedModule = await modulesClient.updateLessonInModule(
+        moduleId,
+        lesson
+      );
+      dispatch(updateModule(updatedModule));
+    } catch (error) {
+      console.error("Error updating lesson:", error);
+    }
+  };
+
+  // Delete lesson with API call
+  const removeLessonFromModule = async (moduleId: string, lessonId: string) => {
+    try {
+      const updatedModule = await modulesClient.deleteLessonFromModule(
+        moduleId,
+        lessonId
+      );
+      dispatch(updateModule(updatedModule));
+    } catch (error) {
+      console.error("Error deleting lesson:", error);
+    }
   };
 
   const fetchModules = async () => {
@@ -94,7 +146,7 @@ export default function Modules() {
                 moduleId={module._id}
                 deleteModule={(moduleId) => removeModule(moduleId)}
                 editModule={(moduleId) => dispatch(editModule(moduleId))}
-                addLesson={(moduleId) => dispatch(addLesson({ moduleId }))}
+                addLesson={(moduleId) => addLessonToModule(moduleId)}
               />
             </div>
 
@@ -112,24 +164,26 @@ export default function Modules() {
                     {lesson.editing && (
                       <FormControl
                         className="w-50 d-inline-block"
-                        // TODO: add a placeholder?
                         placeholder="Lesson name e.g., 'Introduction to React'"
-                        onChange={(e) =>
-                          dispatch(
-                            updateLesson({
-                              moduleId: module._id,
-                              lesson: { ...lesson, name: e.target.value },
-                            })
-                          )
-                        }
+                        onChange={(e) => {
+                          const updatedLesson = {
+                            ...lesson,
+                            name: e.target.value,
+                          };
+                          const updatedModule = {
+                            ...module,
+                            lessons: module.lessons.map((l: any) =>
+                              l._id === lesson._id ? updatedLesson : l
+                            ),
+                          };
+                          dispatch(updateModule(updatedModule));
+                        }}
                         onKeyDown={(e) => {
                           if (e.key === "Enter") {
-                            dispatch(
-                              updateLesson({
-                                moduleId: module._id,
-                                lesson: { ...lesson, editing: false },
-                              })
-                            );
+                            saveLessonInModule(module._id, {
+                              ...lesson,
+                              editing: false,
+                            });
                           }
                         }}
                         value={lesson.name}
@@ -138,12 +192,11 @@ export default function Modules() {
                     <LessonControlButtons
                       moduleId={module._id}
                       lessonId={lesson._id}
-                      onEdit={
-                        (moduleId, lessonId) =>
-                          dispatch(editLesson({ moduleId, lessonId })) // set editing state to true
+                      onEdit={(moduleId, lessonId) =>
+                        dispatch(editLesson({ moduleId, lessonId }))
                       }
                       onDelete={(moduleId, lessonId) =>
-                        dispatch(deleteLesson({ moduleId, lessonId }))
+                        removeLessonFromModule(moduleId, lessonId)
                       }
                     />
                   </ListGroup.Item>
