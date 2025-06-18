@@ -6,7 +6,13 @@ import {
   useLocation,
   useParams,
 } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { setCurrentCourse } from "./reducer";
+
+import { prepareForRedux } from "../../utils/dateUtils";
+import * as coursesClient from "./client";
+
 import Assignments from "./Assignments";
 import AssignmentEditor from "./Assignments/Editor";
 import CourseNavigation from "./Navigation";
@@ -17,14 +23,39 @@ import PeopleTable from "./People/Table";
 export default function Courses() {
   const { cid } = useParams();
   const { pathname } = useLocation();
-  const { courses } = useSelector((state: any) => state.coursesReducer);
-  const course = courses.find((course: any) => course._id === cid);
+  const dispatch = useDispatch();
+  const { courses, currentCourse } = useSelector(
+    (state: any) => state.coursesReducer
+  );
+
+  const course =
+    courses.find((course: any) => course._id === cid) ||
+    (currentCourse?._id === cid ? currentCourse : null);
+
+  const fetchCurrentCourse = async (courseId: string) => {
+    try {
+      const fetchedCourse = await coursesClient.findCourseById(courseId);
+      const courseWithStringDates = prepareForRedux(fetchedCourse, [
+        "startDate",
+        "endDate",
+      ]);
+      dispatch(setCurrentCourse(courseWithStringDates));
+    } catch (error) {
+      console.error("Error fetching course:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (cid && !course) {
+      fetchCurrentCourse(cid);
+    }
+  }, [cid, course]);
 
   return (
     <div id="wd-courses">
       <h2 className="text-danger">
         <FaAlignJustify className="me-3 fs-4 mb-1" />
-        {course?.name} &gt; {pathname.split("/")[4]}
+        {course?.name || "Loading..."} &gt; {pathname.split("/")[4]}
       </h2>
       <hr />
       <div className="d-flex">

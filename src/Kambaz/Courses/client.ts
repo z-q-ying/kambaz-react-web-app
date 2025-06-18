@@ -10,6 +10,12 @@ export const fetchAllCourses = async () => {
   return data;
 };
 
+// Fetch a single course by ID
+export const findCourseById = async (courseId: string) => {
+  const { data } = await axiosWithCredentials.get(`${COURSES_API}/${courseId}`);
+  return data;
+};
+
 // Create a new course
 export const createCourse = async (course: any) => {
   const { data } = await axiosWithCredentials.post(COURSES_API, course);
