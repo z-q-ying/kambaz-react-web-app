@@ -35,50 +35,7 @@ const modulesSlice = createSlice({
         m._id === moduleId ? { ...m, editing: true } : m
       ) as any;
     },
-    // Lessons
-    addLesson: (state, { payload: { moduleId } }) => {
-      state.modules = state.modules.map((module: any) =>
-        module._id === moduleId
-          ? {
-              ...module,
-              lessons: [
-                ...(module.lessons || []),
-                {
-                  _id: uuidv4(),
-                  name: "",
-                  description: "",
-                  editing: true,
-                  module: moduleId,
-                },
-              ],
-            }
-          : module
-      );
-    },
-    deleteLesson: (state, { payload: { moduleId, lessonId } }) => {
-      state.modules = state.modules.map((module: any) =>
-        module._id === moduleId
-          ? {
-              ...module,
-              lessons: module.lessons.filter(
-                (lesson: any) => lesson._id !== lessonId
-              ),
-            }
-          : module
-      ) as any;
-    },
-    updateLesson: (state, { payload: { moduleId, lesson } }) => {
-      state.modules = state.modules.map((module: any) =>
-        module._id === moduleId
-          ? {
-              ...module,
-              lessons: module.lessons.map((l: any) =>
-                l._id === lesson._id ? lesson : l
-              ),
-            }
-          : module
-      ) as any;
-    },
+    // For local state management (no API call needed)
     editLesson: (state, { payload: { moduleId, lessonId } }) => {
       state.modules = state.modules.map((module: any) =>
         module._id === moduleId
@@ -100,9 +57,6 @@ export const {
   deleteModule,
   updateModule,
   editModule,
-  addLesson,
-  deleteLesson,
-  updateLesson,
   editLesson,
 } = modulesSlice.actions;
 

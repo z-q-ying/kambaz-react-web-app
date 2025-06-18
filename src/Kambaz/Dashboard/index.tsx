@@ -37,7 +37,7 @@ export default function Dashboard() {
   };
 
   // Check if current user is faculty
-  const isFaculty = currentUser?.role === 'FACULTY';
+  const isFaculty = currentUser?.role === "FACULTY";
 
   // CRUD Hanldlers
   const fetchCourses = async () => {
@@ -100,7 +100,6 @@ export default function Dashboard() {
   return (
     <div id="wd-dashboard">
       <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
-
       {/* New Course Form - Only show for FACULTY */}
       {isFaculty && (
         <>
@@ -148,7 +147,9 @@ export default function Dashboard() {
             className="mb-2"
             placeholder="Course Description"
             onChange={(e) =>
-              dispatch(setCourse({ ...currentCourse, description: e.target.value }))
+              dispatch(
+                setCourse({ ...currentCourse, description: e.target.value })
+              )
             }
           />
           <Form.Group as={Row} className="mb-2" controlId="courseNumber">
@@ -160,7 +161,9 @@ export default function Dashboard() {
                 value={currentCourse.number}
                 placeholder="e.g., RS321"
                 onChange={(e) =>
-                  dispatch(setCourse({ ...currentCourse, number: e.target.value }))
+                  dispatch(
+                    setCourse({ ...currentCourse, number: e.target.value })
+                  )
                 }
               />
             </Col>
@@ -190,7 +193,9 @@ export default function Dashboard() {
                 value={formatDateForInput(currentCourse.endDate)}
                 type="date"
                 onChange={(e) =>
-                  dispatch(setCourse({ ...currentCourse, endDate: e.target.value }))
+                  dispatch(
+                    setCourse({ ...currentCourse, endDate: e.target.value })
+                  )
                 }
               />
             </Col>
@@ -204,7 +209,9 @@ export default function Dashboard() {
                 value={currentCourse.image}
                 placeholder="e.g., /images/reactjs.jpg"
                 onChange={(e) =>
-                  dispatch(setCourse({ ...currentCourse, image: e.target.value }))
+                  dispatch(
+                    setCourse({ ...currentCourse, image: e.target.value })
+                  )
                 }
               />
             </Col>
@@ -212,7 +219,6 @@ export default function Dashboard() {
           <hr />
         </>
       )}
-
       {/* Course section header with toggle button */}
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h2 id="wd-dashboard-published">
@@ -229,7 +235,6 @@ export default function Dashboard() {
         </Button>
       </div>
       <hr />
-
       <div id="wd-dashboard-courses">
         <Row xs={1} md={5} className="g-4">
           {getDisplayedCourses().map((c: any) => (
@@ -261,7 +266,8 @@ export default function Dashboard() {
                     </Card.Text>
 
                     <div className="d-flex justify-content-between">
-                      {currentUser && showAllCourses &&
+                      {currentUser &&
+                        showAllCourses &&
                         (enrolledCourses.some((ec: any) => ec._id === c._id) ? (
                           <Button
                             variant="secondary"
