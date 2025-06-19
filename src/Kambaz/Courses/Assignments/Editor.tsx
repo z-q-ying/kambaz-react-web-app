@@ -5,7 +5,8 @@ import { useState, useEffect } from "react";
 import { addAssignment, setAssignmentGroups } from "./reducer";
 import * as assignmentsClient from "./client";
 
-function formatDateTime(dt?: string): string {
+// Format date for HTML datetime-local input
+function formatDateTimeForInput(dt?: string): string {
   if (!dt) return "";
   const date = new Date(dt);
   if (isNaN(date.getTime())) return ""; // Invalid date str
@@ -56,9 +57,9 @@ export default function AssignmentEditor() {
         assignmentGroupId: currentGroup?._id || "",
         assignmentGroupName: currentGroup?.groupName || "",
         displayGradeAs: currentAssignment.displayGradeAs || "Percentage",
-        availableFrom: formatDateTime(currentAssignment.availableFrom) || "",
-        dueDate: formatDateTime(currentAssignment.dueDate) || "",
-        availableUntil: formatDateTime(currentAssignment.availableUntil) || "",
+        availableFrom: formatDateTimeForInput(currentAssignment.availableFrom) || "",
+        dueDate: formatDateTimeForInput(currentAssignment.dueDate) || "",
+        availableUntil: formatDateTimeForInput(currentAssignment.availableUntil) || "",
       });
     } else {
       // No aid => add mode
@@ -212,7 +213,7 @@ export default function AssignmentEditor() {
               onChange={handleGroupChange}
             >
               {assignmentGroups.filter((g: any) => g.courseId === cid).length >
-              0 ? (
+                0 ? (
                 assignmentGroups
                   .filter((g: any) => g.courseId === cid)
                   .map((groupOption: any) => (

@@ -1,4 +1,4 @@
-// Helper: Convert date fields to strings for Redux
+// Convert date fields to strings for Redux
 const convertDatesToStrings = (
   obj: any,
   dateFields: string[] = ["startDate", "endDate", "dob"]
@@ -14,7 +14,7 @@ const convertDatesToStrings = (
   return result;
 };
 
-// Helper: Process array of objects, convert date fields to strings
+// Process array of objects, convert date fields to strings
 const convertArrayDatesToStrings = (
   array: any[],
   dateFields: string[] = ["startDate", "endDate", "dob"]
@@ -37,3 +37,19 @@ export const prepareForRedux = (data: any, dateFields?: string[]) =>
 // Store array of date from server in Redux
 export const prepareArrayForRedux = (array: any[], dateFields?: string[]) =>
   convertArrayDatesToStrings(array, dateFields);
+
+// Format date and time for display (used across Quiz, Assignment, etc.)
+export function formatDateTime(dt?: string | Date): string {
+  if (!dt) return "";
+
+  const date = dt instanceof Date ? dt : new Date(dt);
+  return date
+    .toLocaleString("en-US", {
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    })
+    .replace(", ", " at ");
+}

@@ -14,19 +14,7 @@ import AssignmentsControls from "./AssignmentsControls";
 import AssignmentGroupControlButtons from "./AssignmentGroupControlButtons";
 import AssignmentItemControlButtons from "./AssignmentItemControlButtons";
 import * as assignmentsClient from "./client";
-
-function formatDateTime(dt: string): string {
-  const date = new Date(dt);
-  return date
-    .toLocaleString("en-US", {
-      month: "short",
-      day: "numeric",
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    })
-    .replace(", ", " at ");
-}
+import { formatDateTime } from "../../../utils/dateUtils";
 
 export default function Assignments() {
   const { cid } = useParams();
