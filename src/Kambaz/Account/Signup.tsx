@@ -1,35 +1,13 @@
-// import { Form } from "react-bootstrap";
-// import { Link } from "react-router-dom";
-
-// export default function Signup() {
-//   return (
-//     <div id="wd-signup-screen">
-//       <h1>Signup</h1>
-//       <Form.Control id="wd-username" placeholder="username" className="mb-2" />
-//       <Form.Control placeholder="password" type="password" className="mb-2" />
-//       <Form.Control
-//         placeholder="verify password"
-//         type="password"
-//         className="mb-3"
-//       />
-//       <Link to="/Kambaz/Account/Profile" className="btn btn-primary w-100 mb-2">
-//         Signup
-//       </Link>
-//       <Link to="/Kambaz/Account/Signin">Signin</Link>
-//     </div>
-//   );
-// }
-
 import { useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import { useState } from "react";
-import { FormControl } from "react-bootstrap";
+import { FormControl, Form } from "react-bootstrap";
 
 import { setCurrentUser } from "./reducer";
 import * as client from "./client";
 
 export default function Signup() {
-  const [user, setUser] = useState<any>({});
+  const [user, setUser] = useState<any>({ role: "STUDENT" }); // Default to STUDENT
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -45,7 +23,7 @@ export default function Signup() {
       <FormControl
         value={user.username}
         onChange={(e) => setUser({ ...user, username: e.target.value })}
-        className="wd-username b-2"
+        className="wd-username mb-2"
         placeholder="username"
       />
       <FormControl
@@ -55,6 +33,16 @@ export default function Signup() {
         placeholder="password"
         type="password"
       />
+      <Form.Group className="mb-2">
+        <Form.Select
+          value={user.role}
+          onChange={(e) => setUser({ ...user, role: e.target.value })}
+          className="wd-role-select"
+        >
+          <option value="STUDENT">Student</option>
+          <option value="FACULTY">Faculty</option>
+        </Form.Select>
+      </Form.Group>
       <button
         onClick={signup}
         className="wd-signup-btn btn btn-primary mb-2 w-100"
