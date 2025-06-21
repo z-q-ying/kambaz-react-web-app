@@ -1,7 +1,6 @@
 import { IoEllipsisVertical } from "react-icons/io5";
 import { Dropdown } from "react-bootstrap";
 import { FaPencilAlt, FaTrash, FaCheckCircle, FaBan } from "react-icons/fa";
-import { useSelector } from "react-redux";
 
 import QuizPublishStatus from "./QuizPublishStatus";
 
@@ -10,30 +9,37 @@ export default function QuizControlButtons({
   onEdit,
   onDelete,
   onTogglePublish,
+  isStudent,
 }: {
   quiz: any;
   onEdit: (quizId: string) => void;
   onDelete: (quizId: string) => void;
   onTogglePublish: (quizId: string, published: boolean) => void;
+  isStudent?: boolean;
 }) {
-  const currentUser = useSelector(
-    (state: any) => state.accountReducer.currentUser
-  );
-  const isStudent = currentUser?.role === "STUDENT";
-
+  // Student View
   if (isStudent) {
-    return null;
+    return (
+      <div className="d-flex align-items-center gap-2">
+        <QuizPublishStatus
+          published={quiz.published}
+          onClick={undefined} // No click handler for students
+          showClickableHint={false} // Don't show clickable hint
+        />
+      </div>
+    );
   }
 
+  // Faculty View
   return (
     <div className="d-flex align-items-center gap-2">
-      {/* Publish Status - clickable */}
+      {/* Publish Status */}
       <QuizPublishStatus
         published={quiz.published}
         onClick={() => onTogglePublish(quiz._id, !quiz.published)}
       />
 
-      {/* Dropdown Menu */}
+      {/* Dropdown List */}
       <Dropdown>
         <Dropdown.Toggle
           variant="link"

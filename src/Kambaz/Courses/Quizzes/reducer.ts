@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  currentQuiz: null as any,
   quizzes: [] as any[],
 };
 
@@ -8,6 +9,9 @@ const quizzesSlice = createSlice({
   name: "quizzes",
   initialState,
   reducers: {
+    setCurrentQuiz: (state, { payload }) => {
+      state.currentQuiz = payload;
+    },
     setQuizzes: (state, action) => {
       state.quizzes = action.payload;
     },
@@ -28,11 +32,16 @@ const quizzesSlice = createSlice({
       state.quizzes = state.quizzes.map((q: any) =>
         q._id === quizId ? { ...q, published } : q
       );
+      // Also update currentQuiz if it's the same quiz
+      if (state.currentQuiz && state.currentQuiz._id === quizId) {
+        state.currentQuiz.published = published;
+      }
     },
   },
 });
 
 export const {
+  setCurrentQuiz,
   setQuizzes,
   addQuiz,
   updateQuiz,

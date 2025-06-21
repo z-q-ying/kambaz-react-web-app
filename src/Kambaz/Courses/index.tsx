@@ -1,18 +1,16 @@
-import { FaAlignJustify } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
 import {
+  useLocation,
+  useParams,
   Navigate,
   Route,
   Routes,
-  useLocation,
-  useParams,
 } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
+import { FaAlignJustify } from "react-icons/fa";
+
 import { setCurrentCourse } from "./reducer";
-
 import { prepareForRedux } from "../../utils/dateUtils";
-import * as coursesClient from "./client";
-
 import Assignments from "./Assignments";
 import AssignmentEditor from "./Assignments/Editor";
 import CourseNavigation from "./Navigation";
@@ -21,6 +19,8 @@ import Modules from "./Modules";
 import PeopleTable from "./People/Table";
 import Quizzes from "./Quizzes";
 import QuizDetails from "./Quizzes/Details";
+import QuizEditor from "./Quizzes/Editor";
+import * as coursesClient from "./client";
 
 export default function Courses() {
   const { cid } = useParams();
@@ -75,6 +75,8 @@ export default function Courses() {
             <Route path="Assignments/:aid" element={<AssignmentEditor />} />
             <Route path="Quizzes" element={<Quizzes />} />
             <Route path="Quizzes/:qid" element={<QuizDetails />} />
+            <Route path="Quizzes/:qid/edit" element={<QuizEditor />} />
+            <Route path="Quizzes/new" element={<QuizEditor />} />
             <Route path="Grades" element={<h2>Grades</h2>} />
             <Route path="People" element={<PeopleTable />} />
           </Routes>

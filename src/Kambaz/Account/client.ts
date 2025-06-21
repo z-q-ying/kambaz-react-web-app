@@ -55,7 +55,6 @@ export const findUsersByPartialName = async (name: string) => {
 
 export const findUserById = async (id: string) => {
   const response = await axiosWithCredentials.get(`${USERS_API}/${id}`);
-  console.log("!!! Account Client: findUserById response", response);
   return response.data;
 };
 

@@ -21,14 +21,12 @@ export const createAssignmentGroup = async (module: any) => {
 // Update selected assignment group
 export const updateAssignmentGroup = async (group: any) => {
   const response = await axios.put(`${COURSES_API}/${group._id}`, group);
-  console.log("!!! Client: updateAssignmentGroup response:", response.data);
   return response.data;
 };
 
 // Delete selected assignment group and its associated assignments
 export const deleteAssignmentGroup = async (groupId: string) => {
   const response = await axios.delete(`${COURSES_API}/${groupId}`);
-  console.log("!!! Client: deleteAssignmentGroup response:", response.data);
   return response.data;
 };
 
@@ -43,13 +41,11 @@ export const createAssignmentItem = async (groupId: string, assmt: any) => {
 
 // Update selected assignment
 export const updateAssignmentItem = async (assmt: any) => {
-  console.log("!!! Client:", `${COURSES_API}/assignment/${assmt._id}`);
   const response = await axios.put(
     `${COURSES_API}/assignment/${assmt._id}`,
     assmt
   );
-  console.log("!!! Client: updateAssignmentItem response:", response.data);
-  return response.data; // assignment group, possibly a different group
+  return response.data; // Updated assignment group, possibly a different group
 };
 
 // Delete selected assignment

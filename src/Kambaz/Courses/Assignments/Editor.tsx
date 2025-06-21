@@ -1,11 +1,12 @@
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import { Button, Col, Form, Row } from "react-bootstrap";
-import { Link, useParams, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { useState, useEffect } from "react";
+import Editor from "react-simple-wysiwyg";
+
 import { addAssignment, setAssignmentGroups } from "./reducer";
 import * as assignmentsClient from "./client";
 
-// Format date for HTML datetime-local input
 function formatDateTimeForInput(dt?: string): string {
   if (!dt) return "";
   const date = new Date(dt);
@@ -27,13 +28,8 @@ export default function AssignmentEditor() {
     (state: any) => state.assignmentReducer
   );
 
-  const currentGroup = assignmentGroups.find((g: any) =>
-    g.assignments.some((a: any) => a._id === aid)
-  );
-
-  const currentAssignment = currentGroup?.assignments.find(
-    (a: any) => a._id === aid
-  );
+  const [currentAssignment, setCurrentAssignment] = useState<any>(null);
+  const [currentGroup, setCurrentGroup] = useState<any>(null);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -47,22 +43,43 @@ export default function AssignmentEditor() {
     availableUntil: "",
   });
 
+  const fetchAssignmentData = async () => {
+    if (aid && aid !== "new") {
+      const asgmtGroups = await assignmentsClient.findAssignmentsForCourse(
+        cid as string
+      );
+      const foundGroup = asgmtGroups.find((g: any) =>
+        g.assignments.some((a: any) => a._id === aid)
+      );
+      const foundAssignment = foundGroup?.assignments.find(
+        (a: any) => a._id === aid
+      );
+
+      if (foundAssignment && foundGroup) {
+        setCurrentAssignment(foundAssignment);
+        setCurrentGroup(foundGroup);
+        setFormData({
+          title: foundAssignment.title || "",
+          description: foundAssignment.description || "",
+          points: foundAssignment.points || 0,
+          assignmentGroupId: foundGroup._id || "",
+          assignmentGroupName: foundGroup.groupName || "",
+          displayGradeAs: foundAssignment.displayGradeAs || "Percentage",
+          availableFrom:
+            formatDateTimeForInput(foundAssignment.availableFrom) || "",
+          dueDate: formatDateTimeForInput(foundAssignment.dueDate) || "",
+          availableUntil:
+            formatDateTimeForInput(foundAssignment.availableUntil) || "",
+        });
+      }
+    }
+  };
+
   useEffect(() => {
-    if (aid && currentAssignment) {
-      // aid exists => edit mode
-      setFormData({
-        title: currentAssignment.title || "",
-        description: currentAssignment.description || "",
-        points: currentAssignment.points || 0,
-        assignmentGroupId: currentGroup?._id || "",
-        assignmentGroupName: currentGroup?.groupName || "",
-        displayGradeAs: currentAssignment.displayGradeAs || "Percentage",
-        availableFrom: formatDateTimeForInput(currentAssignment.availableFrom) || "",
-        dueDate: formatDateTimeForInput(currentAssignment.dueDate) || "",
-        availableUntil: formatDateTimeForInput(currentAssignment.availableUntil) || "",
-      });
+    if (aid && aid !== "new") {
+      fetchAssignmentData();
     } else {
-      // No aid => add mode
+      // New assignment mode - set initial group from Redux store
       const initialGroup = assignmentGroups.find(
         (g: any) => g.courseId === cid
       );
@@ -78,7 +95,14 @@ export default function AssignmentEditor() {
         availableUntil: "",
       });
     }
-  }, [aid, currentAssignment, currentGroup, assignmentGroups]); // Dependencies
+  }, [aid, assignmentGroups]);
+
+  useEffect(() => {
+    console.log(
+      "!!! Assignments Editor: Current Assignment:",
+      currentAssignment
+    );
+  }, [currentAssignment]);
 
   // Handle input changes for controlled components
   const handleChange = (
@@ -117,9 +141,6 @@ export default function AssignmentEditor() {
     const assmtAllData = constructAssignmentItem();
     const { assignmentGroupId, assignmentGroupName, ...assignmentData } =
       assmtAllData;
-    console.log("!!! Editor: groupId:", assignmentGroupId);
-    console.log("!!! Editor: groupName:", assignmentGroupName);
-    console.log("!!! Editor: Saving assignment with data:", assignmentData);
 
     // Distinguish between new and existing assignments
     if (aid && aid === "new") {
@@ -134,9 +155,7 @@ export default function AssignmentEditor() {
         })
       );
     } else {
-      // Update existing assignment
-      const res = await assignmentsClient.updateAssignmentItem(assmtAllData);
-      console.log("!!! Editor: Updated assignment response:", res);
+      await assignmentsClient.updateAssignmentItem(assmtAllData);
       const asgmtGroups = await assignmentsClient.findAssignmentsForCourse(
         cid as string
       );
@@ -177,12 +196,15 @@ export default function AssignmentEditor() {
         {/* Description */}
         <Form.Group className="mb-3" controlId="wd-description">
           <Form.Label>Description</Form.Label>
-          <Form.Control
-            as="textarea"
-            rows={6}
-            name="description"
+          <Editor
             value={formData.description}
-            onChange={handleChange}
+            onChange={(e) => {
+              setFormData((prev) => ({
+                ...prev,
+                description: e.target.value,
+              }));
+            }}
+            style={{ height: "6em" }}
           />
         </Form.Group>
 
@@ -213,7 +235,7 @@ export default function AssignmentEditor() {
               onChange={handleGroupChange}
             >
               {assignmentGroups.filter((g: any) => g.courseId === cid).length >
-                0 ? (
+              0 ? (
                 assignmentGroups
                   .filter((g: any) => g.courseId === cid)
                   .map((groupOption: any) => (

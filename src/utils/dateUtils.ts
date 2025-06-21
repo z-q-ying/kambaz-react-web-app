@@ -30,6 +30,15 @@ export const formatDateForInput = (date: any): string => {
   return d.toISOString().split("T")[0];
 };
 
+// Format date for HTML input[type="datetime-local"]
+export const formatDateTimeForInput = (date: any): string => {
+  if (!date) return "";
+  const d = new Date(date);
+  if (isNaN(d.getTime())) return "";
+  // Remove the 'Z' and milliseconds to match datetime-local format
+  return d.toISOString().slice(0, 16);
+};
+
 // Store data from server in Redux
 export const prepareForRedux = (data: any, dateFields?: string[]) =>
   convertDatesToStrings(data, dateFields);

@@ -6,7 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 
-import { addQuiz, deleteQuiz, setQuizzes, toggleQuizPublish } from "./reducer";
+import { setQuizzes, deleteQuiz, toggleQuizPublish } from "./reducer";
 import { calculateAvailabilityStatus } from "./utils";
 import { formatDateTime } from "../../../utils/dateUtils";
 
@@ -23,14 +23,13 @@ export default function Quizzes() {
   const navigate = useNavigate();
 
   const isStudent = currentUser?.role === "STUDENT";
-  console.log("!!! Quizzes: Current user role:", currentUser?.role, isStudent);
 
   const fetchQuizzes = async () => {
     try {
       const fetchedQuizzes = await quizzesClient.findQuizzesForCourse(
         cid as string
       );
-      console.log("!!! Fetched quizzes:", fetchedQuizzes);
+      console.log("Fetched quizzes:", fetchedQuizzes);
       dispatch(setQuizzes(fetchedQuizzes));
     } catch (error) {
       console.error("Error fetching quizzes:", error);
@@ -41,20 +40,16 @@ export default function Quizzes() {
     fetchQuizzes();
   }, [cid]);
 
-  const handleAddQuiz = async () => {
-    try {
-      const newQuiz = await quizzesClient.createQuiz(cid as string, {
-        title: "New Quiz",
-      });
-      dispatch(addQuiz(newQuiz));
-      navigate(`/Kambaz/Courses/${cid}/Quizzes/${newQuiz._id}`);
-    } catch (error) {
-      console.error("Error creating quiz:", error);
-    }
+  const handleAddQuiz = () => {
+    navigate(`/Kambaz/Courses/${cid}/Quizzes/new`);
+  };
+
+  const handleViewQuiz = (quizId: string) => {
+    navigate(`/Kambaz/Courses/${cid}/Quizzes/${quizId}`);
   };
 
   const handleEditQuiz = (quizId: string) => {
-    navigate(`/Kambaz/Courses/${cid}/Quizzes/${quizId}`);
+    navigate(`/Kambaz/Courses/${cid}/Quizzes/${quizId}/edit`);
   };
 
   const handleDeleteQuiz = async (quizId: string) => {
@@ -77,23 +72,32 @@ export default function Quizzes() {
     }
   };
 
+  // Filter quizzes for students - only show published ones
+  const displayedQuizzes = isStudent
+    ? quizzes.filter((quiz: any) => quiz.published)
+    : quizzes;
+
   return (
     <div id="wd-quizzes">
-      {/* Controls Section */}
-      <div className="mb-4 pb-1">
-        <QuizzesControls onAddQuiz={handleAddQuiz} />
-      </div>
+      {/* Controls Section - not for students */}
+      {!isStudent && (
+        <div className="mb-4 pb-1">
+          <QuizzesControls onAddQuiz={handleAddQuiz} />
+        </div>
+      )}
 
       {/* Quiz List */}
-      {quizzes.length === 0 ? (
+      {displayedQuizzes.length === 0 ? (
         <div className="text-center mt-5 pt-5">
           <div className="text-muted mb-3">
             <RiQuestionLine className="fs-1" />
           </div>
           <h5 className="text-muted">No quizzes available</h5>
-          <p className="text-muted">
-            Click the <strong>+ Quiz</strong> button to create your first quiz
-          </p>
+          {!isStudent && (
+            <p className="text-muted">
+              Click the <strong>+ Quiz</strong> button to create your first quiz
+            </p>
+          )}
         </div>
       ) : (
         <ListGroup className="rounded-0" id="wd-modules">
@@ -108,7 +112,7 @@ export default function Quizzes() {
 
             {/* Quiz Items */}
             <ListGroup className="rounded-0" id="wd-modules">
-              {quizzes.map((quiz: any) => (
+              {displayedQuizzes.map((quiz: any) => (
                 <ListGroup.Item
                   key={quiz._id}
                   className="wd-assignment-list-item p-3 ps-1"
@@ -121,7 +125,7 @@ export default function Quizzes() {
                     <Col className="px-0">
                       <div className="d-flex flex-column text-start">
                         <button
-                          onClick={() => handleEditQuiz(quiz._id)}
+                          onClick={() => handleViewQuiz(quiz._id)}
                           className="fw-bold text-dark border-0 bg-transparent p-0 m-0 wd-assignment-title-button"
                           style={{ width: "100%", textAlign: "left" }}
                         >
@@ -155,6 +159,7 @@ export default function Quizzes() {
                         onEdit={handleEditQuiz}
                         onDelete={handleDeleteQuiz}
                         onTogglePublish={handleTogglePublish}
+                        isStudent={isStudent}
                       />
                     </Col>
                   </Row>
