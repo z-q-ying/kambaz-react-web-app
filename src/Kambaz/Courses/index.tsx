@@ -17,10 +17,11 @@ import CourseNavigation from "./Navigation";
 import Home from "./Home";
 import Modules from "./Modules";
 import PeopleTable from "./People/Table";
+import Questions from "./Quizzes/Questions";
 import Quizzes from "./Quizzes";
 import QuizDetails from "./Quizzes/Details";
 import QuizEditor from "./Quizzes/Editor";
-import Questions from "./Quizzes/Questions";
+import QuizPreview from "./Quizzes/Attempts/QuizPreview";
 import * as coursesClient from "./client";
 
 export default function Courses() {
@@ -77,6 +78,7 @@ export default function Courses() {
             <Route path="Quizzes" element={<Quizzes />} />
             <Route path="Quizzes/:qid" element={<QuizDetails />} />
             <Route path="Quizzes/:qid/edit" element={<QuizEditor />} />
+            <Route path="Quizzes/:qid/preview" element={<QuizPreview />} />
             <Route path="Quizzes/:qid/questions" element={<Questions />} />
             <Route path="Quizzes/new" element={<QuizEditor />} />
             <Route path="Grades" element={<h2>Grades</h2>} />

@@ -39,26 +39,3 @@ export const deleteQuestion = async (questionId: string) => {
   const response = await axios.delete(`${QUESTIONS_API}/${questionId}`);
   return response.data;
 };
-
-// Update question order for a quiz
-export const updateQuestionOrder = async (
-  quizId: string,
-  questionOrders: any[]
-) => {
-  const response = await axios.put(
-    `${QUIZZES_API}/${quizId}/questions/reorder`,
-    {
-      questionOrders,
-    }
-  );
-  return response.data;
-};
-
-// TODO: Decide to get this front end or back end
-// Get total points for a quiz
-export const getTotalPointsForQuiz = async (quizId: string) => {
-  const response = await axios.get(
-    `${QUIZZES_API}/${quizId}/questions/total-points`
-  );
-  return response.data;
-};

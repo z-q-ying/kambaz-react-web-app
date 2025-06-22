@@ -32,9 +32,8 @@ export default function QuizDetails() {
     navigate(`/Kambaz/Courses/${cid}/Quizzes/${qid}/edit`);
   };
 
-  // TODO: Implement later
   const handlePreview = () => {
-    alert("To be implemented later");
+    navigate(`/Kambaz/Courses/${cid}/Quizzes/${qid}/preview`);
   };
 
   // TODO: Implement later
