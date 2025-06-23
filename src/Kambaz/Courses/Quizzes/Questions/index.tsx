@@ -10,9 +10,9 @@ import {
   deleteQuestion,
   setEditingQuestion,
 } from "./reducer";
+import { setCurrentQuiz } from "../reducer";
 import QuestionEditor from "./QuestionEditor";
 import QuestionViewer from "./QuestionViewer";
-import EditorControlButtons from "../EditorControlButtons";
 import * as client from "./client";
 import * as quizzesClient from "../client";
 
@@ -34,6 +34,13 @@ export default function Questions() {
     if (qid) {
       const questions = await client.findQuestionsForQuiz(qid);
       dispatch(setQuestions(questions));
+    }
+  };
+
+  const refetchQuiz = async () => {
+    if (qid) {
+      const quiz = await quizzesClient.findQuizById(qid);
+      dispatch(setCurrentQuiz(quiz));
     }
   };
 
@@ -59,6 +66,7 @@ export default function Questions() {
     const createdQuestion = await client.createQuestion(qid, newQuestion);
     dispatch(addQuestion(createdQuestion));
     dispatch(setEditingQuestion(createdQuestion._id));
+    await refetchQuiz();
   };
 
   const handleEditQuestion = (questionId: string) => {
@@ -69,27 +77,8 @@ export default function Questions() {
     if (window.confirm("Are you sure you want to delete this question?")) {
       await client.deleteQuestion(questionId);
       dispatch(deleteQuestion(questionId));
+      await refetchQuiz();
     }
-  };
-
-  const handleCancel = async () => {
-    if (window.confirm("Are you sure you want to cancel all changes?")) {
-      dispatch(setEditingQuestion(null));
-      await fetchQuestions();
-      navigate(`/Kambaz/Courses/${cid}/Quizzes`);
-    }
-  };
-
-  const handleSave = async () => {
-    dispatch(setEditingQuestion(null));
-    await fetchQuestions();
-    navigate(`/Kambaz/Courses/${cid}/Quizzes`);
-  };
-
-  const handleSaveAndPublish = async () => {
-    dispatch(setEditingQuestion(null));
-    await quizzesClient.toggleQuizPublishStatus(qid as string, true);
-    navigate(`/Kambaz/Courses/${cid}/Quizzes`);
   };
 
   return (
@@ -151,9 +140,10 @@ export default function Questions() {
                 <QuestionEditor
                   question={question}
                   onCancel={() => dispatch(setEditingQuestion(null))}
-                  onSave={() => {
+                  onSave={async () => {
                     dispatch(setEditingQuestion(null));
-                    fetchQuestions();
+                    await fetchQuestions();
+                    await refetchQuiz();
                   }}
                 />
               ) : (
@@ -167,13 +157,6 @@ export default function Questions() {
           ))}
         </div>
       )}
-
-      {/* Control Buttons */}
-      <EditorControlButtons
-        onCancel={handleCancel}
-        onSave={handleSave}
-        onSaveAndPublish={handleSaveAndPublish}
-      />
     </div>
   );
 }

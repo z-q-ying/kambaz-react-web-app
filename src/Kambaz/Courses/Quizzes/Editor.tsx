@@ -236,10 +236,10 @@ export default function QuizEditor() {
           </Form.Label>
           <Col sm={9}>
             <Form.Control
-              type="number"
-              name="points"
-              value={formData.points}
-              onChange={handleInputChange}
+              type="text"
+              value={`${formData.points}`}
+              readOnly
+              className="bg-light"
             />
           </Col>
         </Form.Group>
@@ -269,19 +269,13 @@ export default function QuizEditor() {
             Shuffle Answers
           </Form.Label>
           <Col sm={9}>
-            <Form.Select
+            <Form.Check
+              type="checkbox"
               name="shuffleAnswers"
-              value={formData.shuffleAnswers ? "Yes" : "No"}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  shuffleAnswers: e.target.value === "Yes",
-                }))
-              }
-            >
-              <option value="Yes">Yes</option>
-              <option value="No">No</option>
-            </Form.Select>
+              checked={formData.shuffleAnswers}
+              onChange={handleInputChange}
+              label="Shuffle answer choices"
+            />
           </Col>
         </Form.Group>
 

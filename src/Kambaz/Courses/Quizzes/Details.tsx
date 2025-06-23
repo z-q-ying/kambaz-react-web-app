@@ -1,12 +1,14 @@
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Alert, Button, Col, Row, Table } from "react-bootstrap";
+import { BsExclamationCircle } from "react-icons/bs";
 import { FaBan, FaCheckCircle, FaEdit } from "react-icons/fa";
 
 import { formatDateTime } from "../../../utils/dateUtils";
 import { setCurrentQuiz, toggleQuizPublish } from "./reducer";
 import * as quizzesClient from "./client";
+import * as attemptsClient from "./Attempts/client";
 
 export default function QuizDetails() {
   const { cid, qid } = useParams();
@@ -15,6 +17,7 @@ export default function QuizDetails() {
 
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const { currentQuiz } = useSelector((state: any) => state.quizReducer);
+  const [pastAttempts, setPastAttempts] = useState<any[]>([]);
 
   const isStudent = currentUser?.role === "STUDENT";
 
@@ -24,9 +27,28 @@ export default function QuizDetails() {
     dispatch(setCurrentQuiz(quiz));
   };
 
+  const fetchPastAttempts = async () => {
+    if (!qid || !currentUser || !isStudent) return;
+    try {
+      const attempts = await attemptsClient.findAttemptsForStudent(
+        qid,
+        currentUser._id
+      );
+      setPastAttempts(attempts);
+    } catch (error) {
+      console.error("Error fetching past attempts:", error);
+    }
+  };
+
   useEffect(() => {
     fetchQuizData();
   }, [qid]);
+
+  useEffect(() => {
+    if (currentUser && isStudent) {
+      fetchPastAttempts();
+    }
+  }, [qid, currentUser, isStudent]);
 
   const handleEdit = () => {
     navigate(`/Kambaz/Courses/${cid}/Quizzes/${qid}/edit`);
@@ -129,12 +151,67 @@ export default function QuizDetails() {
           />
         </div>
 
-        {/* Stark Quiz Button */}
-        <div className="mb-5 d-flex justify-content-center">
-          <Button variant="danger" size="lg" onClick={handleStartQuiz}>
-            Take the Quiz
-          </Button>
-        </div>
+        {/* Past Attempts */}
+        {pastAttempts.length > 0 && (
+          <div className="mb-4">
+            <h5>Past Attempts</h5>
+            <Table striped hover>
+              <thead>
+                <tr>
+                  <th>Attempt</th>
+                  <th>Score</th>
+                  <th>Submitted At</th>
+                </tr>
+              </thead>
+              <tbody>
+                {pastAttempts.map((attempt, index) => (
+                  <tr
+                    key={attempt._id}
+                    onClick={() =>
+                      navigate(
+                        `/Kambaz/Courses/${cid}/Quizzes/${qid}/attempts/${attempt._id}`
+                      )
+                    }
+                    style={{ cursor: "pointer" }}
+                  >
+                    <td>{index + 1}</td>
+                    <td>
+                      {attempt.totalScore}/{currentQuiz.points || 0}
+                    </td>
+                    <td>{formatDateTime(attempt.submittedAt)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </div>
+        )}
+
+        {/* Conditional Start Quiz Button */}
+        {(() => {
+          const maxAttempts = currentQuiz.multipleAttempts
+            ? currentQuiz.attemptsAllowed || 1
+            : 1;
+          const canTakeQuiz = pastAttempts.length < maxAttempts;
+
+          if (canTakeQuiz) {
+            return (
+              <div className="mb-5 d-flex justify-content-center">
+                <Button variant="danger" size="lg" onClick={handleStartQuiz}>
+                  Take the Quiz
+                </Button>
+              </div>
+            );
+          } else {
+            return (
+              <div className="mb-5 d-flex justify-content-center">
+                <Alert variant="warning">
+                  <BsExclamationCircle className="me-2 mb-1" size={18} />
+                  Maximum number of attempts is reached for this quiz.
+                </Alert>
+              </div>
+            );
+          }
+        })()}
       </div>
     );
   }
@@ -208,75 +285,75 @@ export default function QuizDetails() {
           {/* Metadata */}
           <div className="mb-4" style={{ marginTop: "18px" }}>
             <Row className="mb-1">
-              <Col xs={6} md={4} className="text-end fw-bold pe-3">
+              <Col xs={6} className="text-end fw-bold pe-3">
                 Quiz Type
               </Col>
-              <Col xs={6} md={8} className="text-start">
+              <Col xs={6} className="text-start">
                 {currentQuiz.quizType || "Graded Quiz"}
               </Col>
             </Row>
 
             <Row className="mb-1">
-              <Col xs={6} md={4} className="text-end fw-bold pe-3">
+              <Col xs={6} className="text-end fw-bold pe-3">
                 Points
               </Col>
-              <Col xs={6} md={8} className="text-start">
+              <Col xs={6} className="text-start">
                 {currentQuiz.points || 0}
               </Col>
             </Row>
 
             <Row className="mb-1">
-              <Col xs={6} md={4} className="text-end fw-bold pe-3">
+              <Col xs={6} className="text-end fw-bold pe-3">
                 Assignment Group
               </Col>
-              <Col xs={6} md={8} className="text-start">
+              <Col xs={6} className="text-start">
                 {currentQuiz.assignmentGroup || "Quizzes"}
               </Col>
             </Row>
 
             <Row className="mb-1">
-              <Col xs={6} md={4} className="text-end fw-bold pe-3">
+              <Col xs={6} className="text-end fw-bold pe-3">
                 Shuffle Answers
               </Col>
-              <Col xs={6} md={8} className="text-start">
+              <Col xs={6} className="text-start">
                 {currentQuiz.shuffleAnswers ? "Yes" : "No"}
               </Col>
             </Row>
 
             <Row className="mb-1">
-              <Col xs={6} md={4} className="text-end fw-bold pe-3">
+              <Col xs={6} className="text-end fw-bold pe-3">
                 Time Limit
               </Col>
-              <Col xs={6} md={8} className="text-start">
+              <Col xs={6} className="text-start">
                 {currentQuiz.timeLimit || 20} Minutes
               </Col>
             </Row>
 
             <Row className="mb-1">
-              <Col xs={6} md={4} className="text-end fw-bold pe-3">
+              <Col xs={6} className="text-end fw-bold pe-3">
                 Multiple Attempts
               </Col>
-              <Col xs={6} md={8} className="text-start">
+              <Col xs={6} className="text-start">
                 {currentQuiz.multipleAttempts ? "Yes" : "No"}
               </Col>
             </Row>
 
             {currentQuiz.multipleAttempts && (
               <Row className="mb-1">
-                <Col xs={6} md={4} className="text-end fw-bold pe-3">
+                <Col xs={6} className="text-end fw-bold pe-3">
                   How Many Attempts
                 </Col>
-                <Col xs={6} md={8} className="text-start">
+                <Col xs={6} className="text-start">
                   {currentQuiz.attemptsAllowed || 1}
                 </Col>
               </Row>
             )}
 
             <Row className="mb-1">
-              <Col xs={6} md={4} className="text-end fw-bold pe-3">
+              <Col xs={6} className="text-end fw-bold pe-3">
                 Show Correct Answers
               </Col>
-              <Col xs={6} md={8} className="text-start">
+              <Col xs={6} className="text-start">
                 {currentQuiz.showCorrectAnswers === "immediately" &&
                   "Immediately"}
                 {currentQuiz.showCorrectAnswers === "after-submission" &&
@@ -289,38 +366,38 @@ export default function QuizDetails() {
 
             {currentQuiz.accessCode && (
               <Row className="mb-1">
-                <Col xs={6} md={4} className="text-end fw-bold pe-3">
+                <Col xs={6} className="text-end fw-bold pe-3">
                   Access Code
                 </Col>
-                <Col xs={6} md={8} className="text-start">
+                <Col xs={6} className="text-start">
                   {currentQuiz.accessCode}
                 </Col>
               </Row>
             )}
 
             <Row className="mb-1">
-              <Col xs={6} md={4} className="text-end fw-bold pe-3">
+              <Col xs={6} className="text-end fw-bold pe-3">
                 One Question at a Time
               </Col>
-              <Col xs={6} md={8} className="text-start">
+              <Col xs={6} className="text-start">
                 {currentQuiz.oneQuestionAtATime ? "Yes" : "No"}
               </Col>
             </Row>
 
             <Row className="mb-1">
-              <Col xs={6} md={4} className="text-end fw-bold pe-3">
+              <Col xs={6} className="text-end fw-bold pe-3">
                 Webcam Required
               </Col>
-              <Col xs={6} md={8} className="text-start">
+              <Col xs={6} className="text-start">
                 {currentQuiz.webcamRequired ? "Yes" : "No"}
               </Col>
             </Row>
 
             <Row className="mb-1">
-              <Col xs={6} md={4} className="text-end fw-bold pe-3">
+              <Col xs={6} className="text-end fw-bold pe-3">
                 Lock Questions After Answering
               </Col>
-              <Col xs={6} md={8} className="text-start">
+              <Col xs={6} className="text-start">
                 {currentQuiz.lockQuestionsAfterAnswering ? "Yes" : "No"}
               </Col>
             </Row>

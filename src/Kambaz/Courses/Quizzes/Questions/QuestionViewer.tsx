@@ -34,7 +34,11 @@ export default function QuestionViewer({
           {question.type === "true-false" &&
             ` Answer: ${question.trueFalseCorrectAnswer ? "True" : "False"}`}
           {question.type === "fill-in-blank" &&
-            ` ${question.fillInBlankAnswers?.flatMap((item: any) => item.correctAnswers || []).length || 0} possible answers`}
+            ` ${
+              question.fillInBlankAnswers?.flatMap(
+                (item: any) => item.correctAnswers || []
+              ).length || 0
+            } possible answers`}
         </div>
 
         {/* Control Buttons */}
@@ -42,7 +46,7 @@ export default function QuestionViewer({
           <Button variant="primary" size="sm" onClick={onEdit}>
             Edit
           </Button>
-          <Button variant="warning" size="sm" onClick={onDelete}>
+          <Button variant="danger" size="sm" onClick={onDelete}>
             Delete
           </Button>
         </div>

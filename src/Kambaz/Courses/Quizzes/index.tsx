@@ -25,15 +25,10 @@ export default function Quizzes() {
   const isStudent = currentUser?.role === "STUDENT";
 
   const fetchQuizzes = async () => {
-    try {
-      const fetchedQuizzes = await quizzesClient.findQuizzesForCourse(
-        cid as string
-      );
-      console.log("Fetched quizzes:", fetchedQuizzes);
-      dispatch(setQuizzes(fetchedQuizzes));
-    } catch (error) {
-      console.error("Error fetching quizzes:", error);
-    }
+    const fetchedQuizzes = await quizzesClient.findQuizzesForCourse(
+      cid as string
+    );
+    dispatch(setQuizzes(fetchedQuizzes));
   };
 
   useEffect(() => {
@@ -144,12 +139,8 @@ export default function Quizzes() {
                           )}
                           {" | "}
                           {quiz.points} pts
-                          {quiz.totalQuestions > 0 && (
-                            <>
-                              {" | "}
-                              {quiz.totalQuestions} Questions
-                            </>
-                          )}
+                          {" | "}
+                          {quiz.totalQuestions || 0} Questions
                         </small>
                       </div>
                     </Col>

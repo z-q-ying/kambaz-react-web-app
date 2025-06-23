@@ -29,3 +29,9 @@ export const updateAttempt = async (attempt: any) => {
   const response = await axios.put(`${ATTEMPTS_API}/${attempt._id}`, attempt);
   return response.data;
 };
+
+// Find attempt by ID
+export const findAttemptById = async (attemptId: string) => {
+  const response = await axios.get(`${ATTEMPTS_API}/${attemptId}`);
+  return response.data;
+};

@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Alert, Button, Form } from "react-bootstrap";
-import { BsExclamationCircle } from "react-icons/bs";
+import { Button } from "react-bootstrap";
 
-import * as quizzesClient from "../client";
+import QuestionRenderer from "./QuestionRenderer";
+import QuestionNavigation from "./QuestionNavigation";
+import QuizHeader from "./QuizHeader";
 import * as questionsClient from "../Questions/client";
+import * as quizzesClient from "../client";
 
 export default function QuizPreview() {
   const { cid, qid } = useParams();
@@ -23,10 +25,8 @@ export default function QuizPreview() {
 
   const fetchQuizData = async () => {
     if (qid) {
-      const [quizData, questionsData] = await Promise.all([
-        quizzesClient.findQuizById(qid),
-        questionsClient.findQuestionsForQuiz(qid),
-      ]);
+      const quizData = await quizzesClient.findQuizById(qid);
+      const questionsData = await questionsClient.findQuestionsForQuiz(qid);
       setQuiz(quizData);
       setQuestions(questionsData);
     }
@@ -93,107 +93,6 @@ export default function QuizPreview() {
     setIsSubmitted(true);
   };
 
-  const renderQuestion = (question: any, index: number) => {
-    const studentAnswer = answers[question._id];
-    const questionResult = score?.results.find(
-      (r: any) => r.questionId === question._id
-    );
-
-    return (
-      <div key={question._id} className="border mb-3">
-        {/* Header */}
-        <div className="d-flex justify-content-between align-items-center p-3 bg-light border-bottom fw-bold">
-          <span>Question {index + 1}</span>
-          <span>{question.points} pts</span>
-        </div>
-
-        {/* Content */}
-        <div className="p-3">
-          {question.question && (
-            <div
-              className="mb-3"
-              dangerouslySetInnerHTML={{ __html: question.question }}
-            />
-          )}
-
-          {/* Question Inputs */}
-          {question.type === "multiple-choice" && (
-            <div className="mb-3">
-              {question.multipleChoiceOptions?.map(
-                (option: any, optIndex: number) => (
-                  <Form.Check
-                    key={optIndex}
-                    type="radio"
-                    name={`question-${question._id}`}
-                    id={`${question._id}-option-${optIndex}`}
-                    label={option.text}
-                    checked={studentAnswer === option.id}
-                    onChange={() => handleAnswerChange(question._id, option.id)}
-                    disabled={isSubmitted}
-                    className="mb-1"
-                  />
-                )
-              )}
-            </div>
-          )}
-
-          {question.type === "true-false" && (
-            <div className="mb-3">
-              <Form.Check
-                type="radio"
-                name={`question-${question._id}`}
-                id={`${question._id}-true`}
-                label="True"
-                checked={studentAnswer === true}
-                onChange={() => handleAnswerChange(question._id, true)}
-                disabled={isSubmitted}
-                className="mb-1"
-              />
-              <Form.Check
-                type="radio"
-                name={`question-${question._id}`}
-                id={`${question._id}-false`}
-                label="False"
-                checked={studentAnswer === false}
-                onChange={() => handleAnswerChange(question._id, false)}
-                disabled={isSubmitted}
-                className="mb-1"
-              />
-            </div>
-          )}
-
-          {question.type === "fill-in-blank" && (
-            <div className="mb-3">
-              <Form.Control
-                type="text"
-                value={studentAnswer || ""}
-                onChange={(e) =>
-                  handleAnswerChange(question._id, e.target.value)
-                }
-                disabled={isSubmitted}
-                placeholder="Enter your answer..."
-              />
-            </div>
-          )}
-
-          {/* Show results after submission */}
-          {isSubmitted && questionResult && (
-            <div
-              className={`mt-2 p-2 rounded ${
-                questionResult.isCorrect
-                  ? "bg-success text-white"
-                  : "bg-danger text-white"
-              }`}
-            >
-              {questionResult.isCorrect ? "✓ Correct " : "✗ Incorrect "}(
-              {questionResult.pointsEarned}/{questionResult.maxPoints} pts)
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  };
-
   if (!quiz || !questions.length) {
     return <div className="p-3">No questions available...</div>;
   }
@@ -204,27 +103,38 @@ export default function QuizPreview() {
         {/* Left Column for Content */}
         <div className={quiz.oneQuestionAtATime ? "col-md-8" : "col-12"}>
           {/* Header */}
-          <div className="mb-3">
-            <h4>{quiz.title}</h4>
-            <Alert variant="danger" className="mt-3 mb-3">
-              <BsExclamationCircle className="me-2 mb-1" size={18} />
-              This is a preview of the published version of the quiz
-            </Alert>
-            <h4>
-              <b>Quiz Instructions</b>
-            </h4>
-          </div>
+          <QuizHeader title={quiz.title} showPreviewBanner={true} />
 
           {/* Question Display */}
           {quiz.oneQuestionAtATime
-            ? questions[currentQuestionIndex] &&
-              renderQuestion(
-                questions[currentQuestionIndex],
-                currentQuestionIndex
+            ? questions[currentQuestionIndex] && (
+                <QuestionRenderer
+                  question={questions[currentQuestionIndex]}
+                  index={currentQuestionIndex}
+                  answers={answers}
+                  onAnswerChange={handleAnswerChange}
+                  isSubmitted={isSubmitted}
+                  questionResult={score?.results.find(
+                    (r: any) =>
+                      r.questionId === questions[currentQuestionIndex]._id
+                  )}
+                  useMaxPoints={true}
+                />
               )
-            : questions.map((question, index) =>
-                renderQuestion(question, index)
-              )}
+            : questions.map((question, index) => (
+                <QuestionRenderer
+                  key={question._id}
+                  question={question}
+                  index={index}
+                  answers={answers}
+                  onAnswerChange={handleAnswerChange}
+                  isSubmitted={isSubmitted}
+                  questionResult={score?.results.find(
+                    (r: any) => r.questionId === question._id
+                  )}
+                  useMaxPoints={true}
+                />
+              ))}
 
           {/* Scores */}
           {isSubmitted && score && (
@@ -272,31 +182,11 @@ export default function QuizPreview() {
         {/* Optional Right Column */}
         {quiz.oneQuestionAtATime && (
           <div className="col-md-4">
-            <div className="p-3">
-              <h5>Question Navigation</h5>
-              <div className="mb-2">
-                <span className="fw-bold">
-                  Question {currentQuestionIndex + 1} of {questions.length}
-                </span>
-              </div>
-
-              {/* Question Jump Navigation */}
-              <div className="d-flex flex-column gap-2">
-                {questions.map((question, index) => (
-                  <Button
-                    key={index}
-                    variant={
-                      index === currentQuestionIndex ? "danger" : "secondary"
-                    }
-                    size="sm"
-                    onClick={() => setCurrentQuestionIndex(index)}
-                    className="text-start"
-                  >
-                    {index + 1}. {question.title || `Question ${index + 1}`}
-                  </Button>
-                ))}
-              </div>
-            </div>
+            <QuestionNavigation
+              questions={questions}
+              currentQuestionIndex={currentQuestionIndex}
+              onQuestionChange={setCurrentQuestionIndex}
+            />
           </div>
         )}
       </div>
