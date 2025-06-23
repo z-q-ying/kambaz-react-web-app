@@ -19,6 +19,7 @@ import Modules from "./Modules";
 import PeopleTable from "./People/Table";
 import Questions from "./Quizzes/Questions";
 import Quizzes from "./Quizzes";
+import QuizAttempt from "./Quizzes/Attempts/QuizAttempt";
 import QuizDetails from "./Quizzes/Details";
 import QuizEditor from "./Quizzes/Editor";
 import QuizPreview from "./Quizzes/Attempts/QuizPreview";
@@ -77,6 +78,7 @@ export default function Courses() {
             <Route path="Assignments/:aid" element={<AssignmentEditor />} />
             <Route path="Quizzes" element={<Quizzes />} />
             <Route path="Quizzes/:qid" element={<QuizDetails />} />
+            <Route path="Quizzes/:qid/attempt" element={<QuizAttempt />} />
             <Route path="Quizzes/:qid/edit" element={<QuizEditor />} />
             <Route path="Quizzes/:qid/preview" element={<QuizPreview />} />
             <Route path="Quizzes/:qid/questions" element={<Questions />} />

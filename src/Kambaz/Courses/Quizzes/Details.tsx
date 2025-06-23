@@ -36,9 +36,8 @@ export default function QuizDetails() {
     navigate(`/Kambaz/Courses/${cid}/Quizzes/${qid}/preview`);
   };
 
-  // TODO: Implement later
   const handleStartQuiz = () => {
-    alert("To be implemented later");
+    navigate(`/Kambaz/Courses/${cid}/Quizzes/${qid}/attempt`);
   };
 
   const handleTogglePublish = async () => {
