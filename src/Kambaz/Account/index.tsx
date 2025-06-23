@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import AccountNavigation from "./Navigation";
+import About from "./About";
 import Profile from "./Profile";
 import Signin from "./Signin";
 import Signup from "./Signup";
@@ -28,6 +29,7 @@ export default function Account() {
               />
             }
           />
+          <Route path="/About" element={<About />} />
           <Route path="/Signin" element={<Signin />} />
           <Route path="/Profile" element={<Profile />} />
           <Route path="/Signup" element={<Signup />} />

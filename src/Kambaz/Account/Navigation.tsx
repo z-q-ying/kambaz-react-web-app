@@ -9,6 +9,14 @@ export default function AccountNavigation() {
   return (
     <div id="wd-account-navigation" className="wd list-group fs-5 rounded-0">
       <Link
+        to="/Kambaz/Account/About"
+        className={`list-group-item border border-0 ${
+          isActive("/About") ? "active" : "text-danger"
+        }`}
+      >
+        About
+      </Link>
+      <Link
         to="/Kambaz/Account/Signin"
         className={`list-group-item border border-0 ${
           isActive("/Signin") ? "active" : "text-danger"
